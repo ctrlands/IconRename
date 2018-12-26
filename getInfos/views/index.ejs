@@ -5,19 +5,50 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" type="text/css" href="https://www.coolapk.com/static/css/style.css?v1707153">
+  <script src="https://www.coolapk.com/static/jquery/3.2.1/jquery-3.2.1.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://www.coolapk.com/static/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://www.coolapk.com/static/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <title>Document</title>
 </head>
 
 <body>
   <%= title %>
-  <ul>
+  <input>查询
+  <a style="cursor: pointer;" id="pre">上一页</a>
+  <a style="cursor: pointer;" id="next">下一页</a>
+  <ul id="f">
     <% data.forEach(function(item){%>
-    <li>
+    <li style="display:inline-block;">
       <img src='<%= item.thumbSrc %>' alt="" width="96" height="96">
     </li>
     <% }) %>
   </ul>
-  
+  <script>
+    var page = 1;
+
+    $('#next').click(function () {
+      var htmladd = "";
+      page++;
+      $.ajax({
+        url: '/',
+        type: 'post',
+        data: {
+          page: page
+        },
+        success: function (data, status) {
+          $('#f li img').each((idx, element) => {
+            var $element = $(element);
+            $element.attr('src',data[idx].thumbSrc);
+            console.log(data[idx].thumbSrc);
+          });
+        },
+        fail: function (err, status) {
+          console.log(err)
+        }
+      })
+    })
+  </script>
 </body>
 
 </html>

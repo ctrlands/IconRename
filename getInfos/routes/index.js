@@ -20,29 +20,26 @@ router.get('/', function (req, res, next) {
   type = type || 'apk';
   page = page || '1';
   var route = `/${type}?p=${page}`;
+
+  let items = [];
   superagent.get(baseUrl + route)
     .charset('utf-8')
     .end((err, sres) => {
-      var items = [];
       if (err) {
-        console.log('ERR: ' + err);
         res.json({
           code: 400,
           msg: err,
-          sets: items
+          sets: item1
         });
         return;
       }
+
       var $ = cheerio.load(sres.text);
-      $('.app_left .app_left_list a').each((idx, element) => {
+      $('.app_left .app_left_list > a').each((idx, element) => {
         var $element = $(element);
         var $subElement = $element.find('.alllist_img');
-
-        var name = $($element.find('.list_app_title')).val();
         var thumbImgSrc = $subElement.attr('src');
         items.push({
-          title: name,
-          href: $element.attr('href'),
           thumbSrc: thumbImgSrc
         });
       });
@@ -52,6 +49,52 @@ router.get('/', function (req, res, next) {
         msg: 'success',
         data: items
       });
+    })
+});
+
+router.post('/', function (req, res, next) {
+
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+
+  const baseUrl = 'https://www.coolapk.com';
+
+  var type = req.body.type; // 类型
+  var page = req.body.page; // 页码
+  type = type || 'apk';
+  page = page || '1';
+  var route = `/${type}?p=${page}`;
+
+  let items = [];
+  superagent.get(baseUrl + route)
+    .charset('utf-8')
+    .end((err, sres) => {
+      if (err) {
+        res.json({
+          code: 400,
+          msg: err,
+          sets: item1
+        });
+        return;
+      }
+
+      var $ = cheerio.load(sres.text);
+      $('.app_left .app_left_list > a').each((idx, element) => {
+        var $element = $(element);
+        var $subElement = $element.find('.alllist_img');
+        var thumbImgSrc = $subElement.attr('src');
+        items.push({
+          thumbSrc: thumbImgSrc
+        });
+      });
+      res.json(items);
+      /* res.render('index', {
+        title: 'Express',
+        code: 200,
+        msg: 'success',
+        data: items
+      }); */
     })
 });
 
