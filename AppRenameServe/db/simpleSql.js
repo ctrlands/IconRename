@@ -2,8 +2,9 @@ var simpleSql = {
   insert: 'INSERT INTO apps_name (cn_name,en_name,pkg_name,default_icon) VALUES(?,?,?,?)',
   queryAll: 'SELECT * FROM apps_name',
   queryApps: 'SELECT * FROM apps_name WHERE CONCAT(IFNULL(cn_name,""),IFNULL(company,"")) like ?',
-  getAppNameById: 'SELECT pkg_name FROM apps_name WHERE id = ?',
+  getAppNameById: 'SELECT pkg_name FROM apps_name WHERE app_id = ?',
   setThemeName: 'INSERT INTO theme_name(theme_name) value(?)',
+  getThemeNameByName: 'SELECT * FROM theme_name WHERE theme_name = ?',
   countQueryApps: 'SELECT COUNT(*) AS sum FROM apps_name WHERE CONCAT(IFNULL(cn_name,""),IFNULL(company,"")) like ?'
 };
 /**
@@ -12,6 +13,7 @@ var simpleSql = {
  * queryApps: 根据app应用名称及应用开发商查询接口
  * getAppNameById: 根据id查询app的应用包名
  * setThemeName: 设置主题唯一识别码，便于关联主题与图标
+ * getThemeName: 获取当前主题
  * countQueryApps: 统计查询结果的总数量，便于分页
  */
 module.exports = simpleSql;

@@ -36,6 +36,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+// app.use(express.static('D:/upload/default'));
 
 /* app.all("*", function (req, res, next) {
   var regOrigin = req.header("origin");

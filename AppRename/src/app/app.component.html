@@ -3,6 +3,7 @@
     <div class="col-md-3">
       <input type="text" class="form-control sty_input" [(ngModel)]="theme_name" name="theme_name" placeholder="请填写图标包唯一识别码">
       <button type="button" class="btn btn-primary sty_btn" (click)="setThemeName()">提交</button>
+      <span style="font-size: 14px;">当前主题：{{ getThemeName=='' ? getThemeName : 'default' }}</span>
     </div>
     <div class="col-md-3">
       <input type="text" class="form-control sty_input" [(ngModel)]="search_keyword" name="search_keyword" placeholder="应用名称/开发者名称">
@@ -11,35 +12,35 @@
   </div>
 
   <div class="row">
-    <div class="col-md-2" *ngFor="let cn of anyList">
+    <div class="col-md-2" *ngFor="let cn of anyList;index as j" id="{{'wrapper_'+cn.app_id}}">
       <div class="top">
         <div class="top_left" style="display:inline-flex; margin-left: 15px;">
           <img src="../assets/icon/{{cn.pkg_name}}.png" width="96" height="96">
         </div>
         <div class="top_right" style="display:inline-flex;margin-left: 35px;vertical-align: top;">
-          <div class="nullblock" id="{{ 'id' + cn.id}}" ng2FileDrop (fileOver)="fileOverBase(nowId.innerText,$event)"
+            <div class="nullblock" id="{{ 'id' + cn.app_id}}" ng2FileDrop (fileOver)="fileOverBase(nowId.innerText,$event)"
             (onFileDrop)="fileDropOver(nowId.innerText,$event)" [uploader]="uploader">
-            <span #nowId hidden>{{cn.id}}</span>
-            <span hidden ngDefaultControl [(ngModel)]="operateId.id">{{cn.id}}</span>
-            <div *ngFor="let item of uploader.queue;index as i">
-              <img src="" imgPreview [image]="item?._file" />
-            </div>
+            <span #nowId hidden>{{cn?.app_id}}</span>
+            <span hidden ngDefaultControl [(ngModel)]="operateId.id">{{cn?.app_id}}</span>
+            <!-- <div *ngFor="let item of uploadImg;index as i"> -->
+              <!-- <img src="" imgPreview id="{{ 'img_' + nowId.innerText}}" [image]="item?._file" [uploadId]="nowId.innerText" style="display: inline-block;" width="48" height="48"/> -->
+              <img src="../assets/icon/null.png" id="{{ 'img_' + nowId.innerText}}" style="display: inline-block;" width="96" height="96"/>
+            <!-- </div> -->
           </div>
         </div>
       </div>
       <div style="text-align: center;">
-        <p style="margin-bottom: 0;">{{cn.cn_name}}</p>
-        <p style="margin-bottom: 0;">{{cn.pkg_name}}</p>
+        <p style="margin-bottom: 0;">{{cn?.cn_name}}</p>
+        <p style="margin-bottom: 0;">{{cn?.pkg_name}}</p>
       </div>
+      <!-- <span>{{anyList[j] | json}}</span> -->
     </div>
   </div>
-  <!--   <div *ngFor="let pg of pageInfo">
-    <span #cp>{{pg}}</span>
-  </div> -->
+
   <div class="row">
     <div class="m-auto">
-      <!-- <pagination currentPage={{pageInfo?.current_page}} totalPage={{pageInfo?.all_page_total}}></pagination> -->
-      <pagination [totalRecords]='pageInfo.all_total' [rows]='30' [currentPage]='pageInfo?.current_page' (onPageChange)="paginate($event)">
+      {{pageInfo | json}}
+      <pagination [rows]='30' [totalRecords]='pageInfo?.all_total' [currentPage]='pageInfo?.current_page' (onPageChange)="paginate($event)">
       </pagination>
     </div>
   </div>

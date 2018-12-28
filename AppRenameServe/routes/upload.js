@@ -12,6 +12,9 @@ var simpleSql = require('../db/simpleSql');
 // 创建一个msql连接池
 var pool = mysql.createPool(dbConfig.mysql);
 
+var thmemName = 'default';
+var uploadFolder = 'D:/upload';
+
 function getAppNameById(id, _callback) {
   if (id == '' || id == 'null') {
     _callback('id null');
@@ -30,21 +33,6 @@ function getAppNameById(id, _callback) {
   }
 }
 
-/* 使用硬盘存储模式设置存放接收到的文件的路径及文件名 */
-var storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    // 接受到文件后输出的保存路径(若不存在则需要创建)
-    cb(null, 'D:/upload/');
-  },
-  filename: function (req, file, cb) {
-    if (req.body.nowid != '' && req.body.nowid) {
-      getAppNameById(req.body.nowid, function (result) {
-        cb(null, result + '.png');
-      })
-    }
-  }
-})
-
 // 创建文件夹
 var createFolder = function (folder) {
   try {
@@ -57,8 +45,50 @@ var createFolder = function (folder) {
   }
 }
 
-var uploadFolder = 'D:/upload/';
-createFolder(uploadFolder);
+function getThemeByName(themeName, _callback) {
+  if (themeName == '' || themeName == 'null') {
+    _callback('themeName null');
+  } else {
+    pool.getConnection(function (err, connection) {
+      connection.query(simpleSql.getThemeNameByName, themeName, function (err, result) {
+        if (err) {
+          return err;
+        } else {
+          uploadFolder = 'D:/upload/' + result[0].theme_name;
+          createFolder(uploadFolder);
+          _callback(result[0].theme_name);
+          connection.release(); // 释放连接池
+        }
+      })
+    })
+  }
+}
+
+/* 使用硬盘存储模式设置存放接收到的文件的路径及文件名 */
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    // 接受到文件后输出的保存路径(若不存在则需要创建)
+    if (req.body.theme_name != '' && req.body.theme_name) {
+      getThemeByName(req.body.theme_name, function (result) {
+        cb(null, uploadFolder);
+      })
+    } else {
+      createFolder(uploadFolder);
+      uploadFolder = 'D:/upload/default'
+      createFolder(uploadFolder);
+      cb(null, uploadFolder);
+    }
+    // cb(null, 'D:/upload/');
+  },
+  filename: function (req, file, cb) {
+    if (req.body.nowid != '' && req.body.nowid) {
+      getAppNameById(req.body.nowid, function (result) {
+        cb(null, result + '.png');
+      })
+    }
+  }
+})
+
 
 // 创建multer对象
 var upload = multer({
@@ -67,8 +97,6 @@ var upload = multer({
 
 /* post upload listing. */
 router.post('/', upload.single('uploadedfile'), function (req, res, next) {
-  /* console.log(req.query);
-  console.log(req.params); */
   var file = req.file;
   // 接收文件成功后返回数据给前端
   res.json({

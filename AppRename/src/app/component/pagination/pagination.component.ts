@@ -27,7 +27,7 @@ export class PaginationComponent implements OnInit {
 
   initDefaultValue() {
     this.rows = this.rows ? this.rows : 30;
-    this.pageLinkSize = this.pageLinkSize ? this.pageLinkSize : 30;
+    this.pageLinkSize = this.pageLinkSize ? this.pageLinkSize : 5;
     this.currentPage = this.currentPage ? this.currentPage : 0;
   }
 

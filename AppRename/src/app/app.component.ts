@@ -22,6 +22,8 @@ export class AppComponent implements OnInit {
   public theme_name: string;
   public search_keyword: string;
 
+  public uploadImg: any;
+
   title = 'AppRename';
   public anyList: AppInfo[];
   public pageInfo: PageInfo;
@@ -57,7 +59,7 @@ export class AppComponent implements OnInit {
   }
 
 
-  getAppsOfName(): void {
+  public getAppsOfName(): void {
     this.getInfoOfAppService.getInfos_service()
       .subscribe(res => {
         this.anyList = res[0];
@@ -65,7 +67,7 @@ export class AppComponent implements OnInit {
       })
   }
 
-  postAppsOfName(page): void {
+  public postAppsOfName(page): void {
     this.getInfoOfAppService.postInfos_service(page)
       .subscribe(res => {
         this.anyList = res[0];
@@ -73,25 +75,23 @@ export class AppComponent implements OnInit {
       })
   }
 
-  paginate(event) {
+  public paginate(event) {
     this.postAppsOfName(event.page);
-    // console.log(event);
   }
 
-  setThemeName() {
+  public setThemeName() {
     this.getInfoOfAppService.postSetThemeName(this.theme_name)
       .subscribe(res => {
-        console.log(res);
-        return res;
+        console.log(res)
+        // this.theme_name = res[0];
       })
   }
 
-  searchKeyword() {
+  public searchKeyword() {
     this.getInfoOfAppService.postQueryApps(this.search_keyword)
       .subscribe(res => {
         this.anyList = res[0];
         this.pageInfo = res[1][0];
-        // console.log(res);
       })
   }
 
@@ -114,7 +114,7 @@ export class AppComponent implements OnInit {
    * @param event: 文件的相关信息
    * @param id: 当前Icon的Id
    */
-  fileDropOver(id: string, event) {
+  public fileDropOver(id: string, event) {
 
     /* FileUploader有个数组类型的属性queue，里面是所有拖拽的和选择的文件，只要操作这个属性便可以进行文件上传。 */
     if (event[0].type != 'image/png') {
@@ -123,22 +123,27 @@ export class AppComponent implements OnInit {
       let that = this; // 增加参数传参过去，是把这个参数加入form表单中添加; 可以增加多个参数就用form.append('参数',''自定义的参数)
       // this.uploader.setOptions({ additionalParameter: { 'nowid': '10000' } });
 
-
+      var ids = '#img_' + id;
+      console.log(this.el.nativeElement.querySelector(ids));
       // this.uploader.queue[0].url = `http://localhost:3000/upload?id=${id}`;
       this.uploader.queue[0].onSuccess = (response, status, headers) => {
-        // console.log(this.el.nativeElement.querySelector('#id10002'));
+
         // 上传文件成功
         if (status == 200) {
           // 上传文件后获取服务器返回的数据
           let tempRes = JSON.parse(response);
+          this.uploadImg = this.uploader.queue[0];
+          console.log(this.uploadImg);
           // that.mod_new_image = tempRes.data; // 申明一个变量接住返回的数据，可以进行赋值
           // 为什么要在往外面申明一个that代替this, 现在是只在uploader里面, this就只能指uploader
-          // that.uploader.clearQueue(); // 上传成功之后清除上传的文件流保证下一个文件流是新的
+          that.uploader.clearQueue(); // 上传成功之后清除上传的文件流保证下一个文件流是新的
+          this.el.nativeElement.querySelector(ids).src = '../assets/icon/com.mobike.mobikeapp.png';
         } else {
           // 上传文件后获取服务器返回的数据错误
           console.log('错误！')
         }
       };
+      
       this.uploader.queue[0].upload(); // 开始上传
     }
   }
