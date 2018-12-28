@@ -15,6 +15,11 @@ var pool = mysql.createPool(dbConfig.mysql);
 var thmemName = 'default';
 var uploadFolder = 'D:/upload';
 
+/**
+ * 根据app_id获取app信息
+ * @param {*} id : app_id
+ * @param {*} _callback : 回调函数
+ */
 function getAppNameById(id, _callback) {
   if (id == '' || id == 'null') {
     _callback('id null');
@@ -78,7 +83,6 @@ var storage = multer.diskStorage({
       createFolder(uploadFolder);
       cb(null, uploadFolder);
     }
-    // cb(null, 'D:/upload/');
   },
   filename: function (req, file, cb) {
     if (req.body.nowid != '' && req.body.nowid) {
@@ -99,9 +103,37 @@ var upload = multer({
 router.post('/', upload.single('uploadedfile'), function (req, res, next) {
   var file = req.file;
   // 接收文件成功后返回数据给前端
-  res.json({
-    res_code: 'success'
+  // console.log(file.filename);
+  var themeName = req.body.themeName;
+  var id = req.body.nowid;
+  // var srcResource = '/default/' + themeName + '/' + file.filename;
+  var srcResource = '/default/default/' + file.filename;
+  console.log(themeName,id);
+
+
+  pool.getConnection(function (err, connection) {
+    if (err) {
+      res.send(err).end();
+    } else {
+      var it = `INSERT INTO src_info(app_id, theme_id, src_resource) value('${id}', '${themeName}', '${srcResource}')`;
+      connection.query(it, '', function (err, result) {
+        if (err) {
+          return err;
+        } else {
+          res.json({
+            res_name: file.filename,
+            res_src: srcResource
+          });
+          connection.release(); // 释放连接池
+        }
+      })
+    }
   });
+
+
+  // res.json({
+  //   res_name: file.filename
+  // });
 });
 
 

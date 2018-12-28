@@ -104,7 +104,8 @@ export class AppComponent implements OnInit {
    */
   public fileOverBase(id, event) {
     this.uploader.onBuildItemForm = function (fileItem, form) {
-      form.append('nowid', id);
+      form.append('nowid', id); // 当前图标app_id或者当前ng2-file-upload对应div
+      form.append('themeName', '10000'); // 当前图标包对应主题名称
     }
   }
 
@@ -132,12 +133,14 @@ export class AppComponent implements OnInit {
         if (status == 200) {
           // 上传文件后获取服务器返回的数据
           let tempRes = JSON.parse(response);
-          this.uploadImg = this.uploader.queue[0];
-          console.log(this.uploadImg);
+          console.log(tempRes);
+          /* this.uploadImg = this.uploader.queue[0];
+          console.log(this.uploadImg); */
           // that.mod_new_image = tempRes.data; // 申明一个变量接住返回的数据，可以进行赋值
           // 为什么要在往外面申明一个that代替this, 现在是只在uploader里面, this就只能指uploader
           that.uploader.clearQueue(); // 上传成功之后清除上传的文件流保证下一个文件流是新的
-          this.el.nativeElement.querySelector(ids).src = '../assets/icon/com.mobike.mobikeapp.png';
+          // this.el.nativeElement.querySelector(ids).src = '../assets/icon/'+tempRes.res_name;
+          this.el.nativeElement.querySelector(ids).src = '/api/' + tempRes.res_src;
         } else {
           // 上传文件后获取服务器返回的数据错误
           console.log('错误！')

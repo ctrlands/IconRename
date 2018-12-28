@@ -10,6 +10,7 @@
 
 <body>
   <input type="file" value="" />
+  <img src="/default/default/com.sing.client.png">
   <script>
     var Input = document.querySelector("input");
     Input.onchange = function upload() {
@@ -22,8 +23,6 @@
         var fd = new FormData();
         // 把 input 标签获取的文件加入 FromData 中
         fd.append('file', files[0]);
-        console.log(fd);
-
         // Ajax
         var request = new XMLHttpRequest();
         request.open("POST", "http://localhost:3000/upload");

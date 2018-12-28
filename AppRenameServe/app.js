@@ -13,7 +13,6 @@ var uploadRouter = require('./routes/upload');
 var themeRouter = require('./routes/theme');
 
 var queryRouter = require('./routes/query');
-var ejs = require('ejs');
 
 var app = express();
 
@@ -36,25 +35,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-// app.use(express.static('D:/upload/default'));
-
-/* app.all("*", function (req, res, next) {
-  var regOrigin = req.header("origin");
-  if (req.method === "OPTIONS") {
-    console.log("cros");
-    var header = {};
-    res.header("access-control-allow-origin", "http://127.0.0.1:3000");
-    res.header("Access-Control_Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
-    res.end();
-  } else {
-    if (regOrigin != undefined && regOrigin.indexOf("http://127.0.0.1:4200") > -1) {
-      // 设置允许http://127.0.0.1:3000响应
-      res.header("access-control-allow-origin", "http://127.0.0.1:4200");
-      res.header("Access-Control_Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
-      next();
-    }
-  }
-}) */
+app.use('/default', express.static('D:/upload/'));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
