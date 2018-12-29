@@ -26,28 +26,59 @@ router.get('/', function (req, res, next) {
 });
 
 
-/* 设置theme POST */
+/* 设置theme名字 POST */
 router.post('/', function (req, res, next) {
   // 从连接池获取连接
   pool.getConnection(function (err, connection) {
-    // 获取前台页面传过来的参数
-    var theme_name = req.body.theme_name;
-    // 建立连接, 分页查询
-    connection.query(simpleSql.setThemeName, theme_name, function (err, result) {
-      if (err) {
-        res.send(err).end(); // 数据库连接异常
-      } else {
-        /* var toFrontData = [{
-          all_total: all_total,
-          prev_page: prev_page,
-          next_page: next_page,
-          current_page: current_page,
-          all_page_total: all_page_total
-        }] */
-        responseJSON(res,result);
-        connection.release();
-      }
-    });
+    if (err) {
+      res.send('数据库连接错误' + err);
+      connection.release();
+    } else {
+
+      // 获取前台页面传过来的参数
+      var theme_name = req.body.theme_name;
+      var msg = {
+        code: '',
+        msg: ''
+      };
+      // 判断主题名是否重复
+      connection.query(simpleSql.isDuplicateThemeName, theme_name, (qryerr, result) => {
+        if (qryerr) {
+          res.send('sql语法错误' + qryerr).end(); // 数据库连接异常
+          connection.release();
+        } else {
+          console.log(result);
+          if (result.length >= 1) {
+            msg.code = '-200';
+            msg.msg = '该主题已存在, 请重命名或选择打开该主题';
+            res.json([msg]).end();
+            connection.release();
+          } else {
+            // 建立连接, 分页查询
+            connection.query(simpleSql.setThemeName, theme_name, function (qryerr1, addresult) {
+              if (qryerr1) {
+                res.send('sql语法错误' + qryerr1).end(); // 数据库连接异常
+                connection.release();
+              } else {
+                /* var toFrontData = [{
+                  all_total: all_total,
+                  prev_page: prev_page,
+                  next_page: next_page,
+                  current_page: current_page,
+                  all_page_total: all_page_total
+                }] */
+                msg.code = '200';
+                msg.msg = '创建新主题成功！';
+                req.session['themeName'] = theme_name;
+                // console.log(req.session);
+                res.json([msg]).end();
+                connection.release();
+              }
+            });
+          }
+        }
+      })
+    }
   });
 });
 

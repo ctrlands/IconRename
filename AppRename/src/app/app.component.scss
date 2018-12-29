@@ -16,3 +16,6 @@
   margin: 0 10px;
   font-size: 14px;
 }
+.dropdown-menu::-webkit-scrollbar {
+  display: none;
+}

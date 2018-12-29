@@ -24,6 +24,10 @@ export class AppComponent implements OnInit {
 
   public uploadImg: any;
 
+  public themeLists: any;
+
+  public addThemeNameMsg: any;
+
   title = 'AppRename';
   public anyList: AppInfo[];
   public pageInfo: PageInfo;
@@ -56,9 +60,13 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.operateId = { id: '10000' };
     this.getAppsOfName();
+    this.getThemeList();
   }
 
 
+  /**
+   * 获取所有应用信息
+   */
   public getAppsOfName(): void {
     this.getInfoOfAppService.getInfos_service()
       .subscribe(res => {
@@ -67,6 +75,10 @@ export class AppComponent implements OnInit {
       })
   }
 
+  /**
+   * 模糊查询app信息根据应用名称/应用开发商名称
+   * @param page 
+   */
   public postAppsOfName(page): void {
     this.getInfoOfAppService.postInfos_service(page)
       .subscribe(res => {
@@ -75,15 +87,25 @@ export class AppComponent implements OnInit {
       })
   }
 
+  /**
+   * 分页
+   * @param event 
+   */
   public paginate(event) {
     this.postAppsOfName(event.page);
   }
 
+  /**
+   * 添加新主题
+   */
   public setThemeName() {
     this.getInfoOfAppService.postSetThemeName(this.theme_name)
       .subscribe(res => {
-        console.log(res)
-        // this.theme_name = res[0];
+        this.addThemeNameMsg = '';
+        this.addThemeNameMsg = res[0].msg;
+        if (res[0].code == '200') {
+          this.getThemeList();
+        }
       })
   }
 
@@ -93,6 +115,16 @@ export class AppComponent implements OnInit {
         this.anyList = res[0];
         this.pageInfo = res[1][0];
       })
+  }
+
+  /**
+   * 获取所有主题信息
+   */
+  public getThemeList() {
+    this.getInfoOfAppService.getThemeList_service()
+    .subscribe( res => {
+      this.themeLists = res[0];
+    })
   }
 
 
