@@ -23,6 +23,39 @@ var responseJSON = function (res, ret) {
 /* 获取当前theme GET. */
 router.get('/', function (req, res, next) {
 
+  
+  var resultJson;
+  pool.getConnection((err, connection) => {
+    if (err) {
+      res.send('数据库连接错误！' + err).end();
+      connection.release();
+    } else {
+      var theme = req.query.theme;
+      connection.query(simpleSql.getAppsByThemeName, theme, (qryerr, result) => {
+        if (qryerr) {
+          res.send('sql语法错误！' + qryerr).end();
+          connection.release();
+        } else {
+          connection.query(simpleSql.queryAll, '', (qry1err, allresult) => {
+            for (let i = 0; i < allresult.length; i++) {
+              for (let j = 0; j < result.length; j++) {
+                if (result[j].app_id == allresult[i].app_id) {
+                  allresult[i].src = result[j].src_resource;
+                }
+              }
+            }
+            res.json([allresult]);
+            console.log(allresult);
+
+          })
+
+          // res.json([result]).end();
+          connection.release();
+        }
+      })
+    }
+  })
+
 });
 
 
@@ -47,7 +80,6 @@ router.post('/', function (req, res, next) {
           res.send('sql语法错误' + qryerr).end(); // 数据库连接异常
           connection.release();
         } else {
-          console.log(result);
           if (result.length >= 1) {
             msg.code = '-200';
             msg.msg = '该主题已存在, 请重命名或选择打开该主题';

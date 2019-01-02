@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, Output, OnInit, DoCheck, OnChanges, SimpleChanges } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'pagination',
@@ -7,14 +6,14 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./pagination.component.scss']
 })
 export class PaginationComponent implements OnInit {
-  @Input() totalRecords: number; // 数据总量
-  @Input() rows: number = 30; // 每页显示数量
-  @Input() currentPage: number; // 当前页码
-  @Input() pageLinkSize: number;
+  @Input() totalRecords: any; // 数据总量
+  @Input() rows: any = 30; // 每页显示数量
+  @Input() currentPage: any; // 当前页码
+  @Input() pageLinkSize: any; // 页面范围
   @Output() onPageChange = new EventEmitter();
-  private pageCount: number;
-  private pageArr: Array<number> = [];
-  private pageValidation: any = { isFirst: false, isLast: false };
+  public pageCount: any;
+  public pageArr: Array<any> = [];
+  public pageValidation: any = { isFirst: false, isLast: false };
 
   constructor() { }
 
@@ -23,12 +22,14 @@ export class PaginationComponent implements OnInit {
     this.getPageCount();
     this.getVisiblePageArr();
     this.validateIfFirstLast();
+    console.log(this.totalRecords);
   }
 
   initDefaultValue() {
     this.rows = this.rows ? this.rows : 30;
     this.pageLinkSize = this.pageLinkSize ? this.pageLinkSize : 5;
     this.currentPage = this.currentPage ? this.currentPage : 0;
+    this.totalRecords = this.totalRecords ? this.totalRecords : 30;
   }
 
   getPageCount() {
@@ -59,7 +60,6 @@ export class PaginationComponent implements OnInit {
     for (var i = start; i <= end; i++) {
       this.pageArr.push(i);
     }
-    // console.log(this.pageArr);
   }
 
   getCurrentPage(actionKey: string) {
@@ -93,35 +93,5 @@ export class PaginationComponent implements OnInit {
       this.pageValidation = { isFirst: false, isLast: false };
     }
   }
-
-
-  /* @Input() totalPage: number;
-  @Input() currentPage: number;
-  @Output() pageChange = new EventEmitter<number>();
-
-  constructor(
-    private http: HttpClient
-  ) { }
-
-  ngOnInit() {
-  }
-
-  changePage(pageNum) {
-    this.pageChange.emit(pageNum);
-  }
-
-  goPrev(pageNum) {
-    if (pageNum >= 1) {
-      this.changePage(pageNum - 1);
-    }
-  }
-
-  goNext(pageNum) {
-    if (pageNum <= this.totalPage - 2) {
-      this.changePage(pageNum + 1);
-    }
-  } */
-
-
 
 }

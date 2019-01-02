@@ -9,7 +9,7 @@
         </button>
         <div class="dropdown-menu" style="height:200px; min-width: 7rem; overflow-y:scroll;">
           <div *ngFor="let themeList of themeLists">
-            <a class="dropdown-item" href="#" style="font-size: 16px;">{{themeList?.theme_name}}</a>
+            <a class="dropdown-item" (click)="getAppsByTheme(themeList?.theme_name)" style="font-size: 16px;">{{themeList?.theme_name}}</a>
             <div class="dropdown-divider"></div>
           </div>
         </div>
@@ -33,12 +33,12 @@
 
     <!-- 根据主题名查询 -->
     <div class="col-md-3">
-        <input type="text" class="form-control sty_input" [(ngModel)]="search_keyword" name="search_keyword" placeholder="主题名">
-        <button type="button" [disabled]="! search_keyword" class="btn btn-primary sty_btn" (click)="searchKeyword()">查询</button>
-      </div>
+      <input type="text" class="form-control sty_input" [(ngModel)]="search_keyword" name="search_keyword" placeholder="主题名">
+      <button type="button" [disabled]="! search_keyword" class="btn btn-primary sty_btn" (click)="searchKeyword()">查询</button>
+    </div>
   </div>
 
-  <div class="row" *ngIf="1>3">
+  <div class="row">
     <div class="col-md-2" *ngFor="let cn of anyList;index as j" id="{{'wrapper_'+cn.app_id}}">
       <div class="top">
         <div class="top_left" style="display:inline-flex; margin-left: 15px;">
@@ -51,8 +51,8 @@
             <span hidden ngDefaultControl [(ngModel)]="operateId.id">{{cn?.app_id}}</span>
             <!-- <div *ngFor="let item of uploadImg;index as i"> -->
             <!-- <img src="" imgPreview id="{{ 'img_' + nowId.innerText}}" [image]="item?._file" [uploadId]="nowId.innerText" style="display: inline-block;" width="48" height="48"/> -->
-            <img src="../assets/icon/null.png" id="{{ 'img_' + nowId.innerText}}" style="display: inline-block;" width="96"
-              height="96" />
+            <img [src]="'/api/'+cn?.src" appDefaultImg id="{{ 'img_' + nowId.innerText}}" style="display: inline-block;"
+              width="96" height="96" />
             <!-- </div> -->
           </div>
         </div>
@@ -61,15 +61,15 @@
         <p style="margin-bottom: 0;">{{cn?.cn_name}}</p>
         <p style="margin-bottom: 0;">{{cn?.pkg_name}}</p>
       </div>
-      <!-- <span>{{anyList[j] | json}}</span> -->
     </div>
   </div>
 
   <div class="row">
     <div class="m-auto">
-      {{pageInfo | json}}
-      <pagination [rows]='30' [totalRecords]='pageInfo?.all_total' [currentPage]='pageInfo?.current_page'
-        (onPageChange)="paginate($event)">
+      <!-- <span #all>{{pageInfo | json}}</span> -->
+      <span>{{all}}</span>
+      <!-- <span>{{all.innerText}}</span> -->
+      <pagination [rows]="30" [currentPage]="pageInfo?.current_page" [totalRecords]="42" (onPageChange)="paginate($event)">
       </pagination>
     </div>
   </div>

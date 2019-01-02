@@ -17,12 +17,14 @@ import { CommonModule } from '@angular/common';
 import { FileUploadModule } from 'ng2-file-upload';
 import { ImagePreviewDirective } from './directive/image-preview.directive';
 import { PaginationComponent } from './component/pagination/pagination.component';
+import { DefaultImgDirective } from './directive/default-img.directive';
 
 @NgModule({
   declarations: [
     AppComponent,
     ImagePreviewDirective,
-    PaginationComponent
+    PaginationComponent,
+    DefaultImgDirective
   ],
   imports: [
     BrowserModule,

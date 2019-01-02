@@ -1,5 +1,5 @@
-import { Component, Input, OnInit, ElementRef, Renderer2, ViewChild, isDevMode } from '@angular/core';
-
+import { Component,enableProdMode, Input, OnInit, ElementRef, Renderer2, ViewChild, isDevMode } from '@angular/core';
+enableProdMode();
 import { HttpClient } from '@angular/common/http';
 
 import { FileUploader, FileItem } from 'ng2-file-upload';
@@ -15,8 +15,10 @@ import { PageInfo } from './class/page-info';
   styleUrls: ['./app.component.scss'],
   providers: []
 })
+
 export class AppComponent implements OnInit {
   @Input() nowId: number;
+  
 
 
   public theme_name: string;
@@ -34,6 +36,13 @@ export class AppComponent implements OnInit {
   public operateId = {
     id: ''
   };
+
+  public srcInfos: any;
+
+  public all: any;
+
+
+
   public uploader: FileUploader = new FileUploader({
     url: 'http://localhost:3000/upload',
     method: 'post',
@@ -68,10 +77,13 @@ export class AppComponent implements OnInit {
    * 获取所有应用信息
    */
   public getAppsOfName(): void {
-    this.getInfoOfAppService.getInfos_service()
+    let page: string = '0';
+    this.getInfoOfAppService.getInfos_service(page)
       .subscribe(res => {
-        this.anyList = res[0];
+        this.all = res[1][0].all_total;
+        console.log(this.all);
         this.pageInfo = res[1][0];
+        this.anyList = res[0];
       })
   }
 
@@ -124,6 +136,18 @@ export class AppComponent implements OnInit {
     this.getInfoOfAppService.getThemeList_service()
     .subscribe( res => {
       this.themeLists = res[0];
+    })
+  }
+
+  /**
+   * 根据主题名显示该主题的图标
+   * @param theme_name : 主题名
+   */
+  getAppsByTheme(theme_name) {
+    this.getInfoOfAppService.getAppsByTheme_service(theme_name)
+    .subscribe (res => {
+      this.anyList = res[0];
+      // console.log(this.srcInfos)
     })
   }
 

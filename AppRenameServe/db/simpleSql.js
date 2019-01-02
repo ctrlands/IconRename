@@ -21,7 +21,7 @@ var simpleSql = {
 
   themeList: 'SELECT (theme_name) FROM theme_name',
 
-  getAppsByThemeName: 'SELECT app.app_id, app.pkg_name, app.cn_name, src.src_resource FROM apps_name AS app, theme_name AS theme, src_info AS src where src.theme_id = theme.theme_id AND src.app_id = app.app_id AND theme.theme_name = ?',
+  getAppsByThemeName: 'SELECT theme.theme_name, app.app_id, app.pkg_name, app.cn_name, src.src_resource FROM apps_name AS app, theme_name AS theme, src_info AS src where src.theme_id = theme.theme_id AND src.app_id = app.app_id AND theme.theme_name = ?',
 
 };
 /**

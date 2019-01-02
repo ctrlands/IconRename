@@ -19,8 +19,11 @@ export class GetInfoOfAppService {
   /**
    * 获取所有应用数据信息，未分页
    */
-  getInfos_service() {
-    return this.http.get('/api/sql');
+  getInfos_service(page: string) {
+    let o_post = {
+      page: page
+    }
+    return this.http.post('/api/sql', o_post);
   }
 
   /**
@@ -63,5 +66,16 @@ export class GetInfoOfAppService {
       query_keyword: reqBody
     }
     return this.http.post('/api/query', o_query_keyword); // 后台使用req.body.page取到该值。这里不设置{headers: new HttpHeaders({'Content-Type': 'application/x-www-form-urlencoded'})}
+  }
+
+  /**
+   * 根据主题名获取该主题的图标
+   * @param reqBody ：主题名
+   */
+  getAppsByTheme_service(reqBody: any) {
+    let theme = {
+      theme: reqBody
+    }
+    return this.http.get('/api/theme', {params: theme});
   }
 }
