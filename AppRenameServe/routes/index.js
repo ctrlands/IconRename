@@ -14,31 +14,39 @@ router.get('/', function(req, res, next) {
   //   res.render('index', { title: 'Express', count: sess.views });
   // }
 
-  gen_session: (o_session, res) => {
-    let auth_user = 'admin';
-    res.cookie('isTheme', auth_user, {
-      path: '/',
-      signed: true,
-      httpOnly: true,
-      maxAge: 30 * 1000
-    })
-  }
-
-  let o_session = 'o_value';
-  auth.gen_session(o_session, res);
-
-  
-
-
   let msg = 'default';
   let i = 1;
+
+  let o_session = 'o_value';
+
+  /* req.session.theme = 'default';
+  if (req.session.theme) {
+    console.log(req.session);
+    res.send({title: 'Express', count: req.session.theme , msg: msg}).end();;
+  } else {
+    req.session.theme = 'default-value';
+    res.send({ title: 'Express', count: req.session.theme, msg: msg}).end();
+  } */
+
   // if (req.cookies.isFirst) {
-  //   i++;
-  //   msg = '欢迎第' + i + '次访问';
+  //   res.send("欢迎再次访问！");
+  //   console.log(req.cookies);
   // } else {
-  //   res.cookie('isFirst', 1, {maxAge: 20 * 1000});
-  //   msg = '欢迎第' + i + '次访问';
+  //   res.cookie("isFirst", 1, { maxAge: 30 * 1000 });
+  //   res.send("欢迎第一次访问！")
   // }
+
+
+  
+  if (req.cookies.isFirsts) {
+    i++;
+    msg = '欢迎第' + i + '次访问';
+    res.send({ title: 'Express', count: i, msg: msg});
+  } else {
+    res.cookie('isFirsts', 'themeName', {maxAge: 20 * 1000});
+    msg = '欢迎第' + i + '次访问';
+    res.send({ title: 'Express', count: i, msg: msg});
+  }
 
 
 
@@ -51,7 +59,7 @@ router.get('/', function(req, res, next) {
   if (req.cookies["isTheme"]) {
     res.locals.isTheme = req.cookies.isTheme.name;
   } */
-  res.render('index', { title: 'Express', count: i , msg: msg});
+  
 });
 
 module.exports = router;

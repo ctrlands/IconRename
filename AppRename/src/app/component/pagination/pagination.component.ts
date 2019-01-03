@@ -22,14 +22,20 @@ export class PaginationComponent implements OnInit {
     this.getPageCount();
     this.getVisiblePageArr();
     this.validateIfFirstLast();
-    console.log(this.totalRecords);
+  }
+
+  ngOnChanges() {
+    this.initDefaultValue();
+    this.getPageCount();
+    this.getVisiblePageArr();
+    this.validateIfFirstLast();
   }
 
   initDefaultValue() {
     this.rows = this.rows ? this.rows : 30;
     this.pageLinkSize = this.pageLinkSize ? this.pageLinkSize : 5;
     this.currentPage = this.currentPage ? this.currentPage : 0;
-    this.totalRecords = this.totalRecords ? this.totalRecords : 30;
+    this.totalRecords = this.totalRecords ? this.totalRecords : 0;
   }
 
   getPageCount() {

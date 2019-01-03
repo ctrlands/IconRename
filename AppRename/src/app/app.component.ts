@@ -21,6 +21,8 @@ export class AppComponent implements OnInit {
   
 
 
+  public inuse_theme_name: string;
+
   public theme_name: string;
   public search_keyword: string;
 
@@ -30,17 +32,14 @@ export class AppComponent implements OnInit {
 
   public addThemeNameMsg: any;
 
+  public page: any;
+
   title = 'AppRename';
   public anyList: AppInfo[];
   public pageInfo: PageInfo;
   public operateId = {
     id: ''
   };
-
-  public srcInfos: any;
-
-  public all: any;
-
 
 
   public uploader: FileUploader = new FileUploader({
@@ -80,8 +79,6 @@ export class AppComponent implements OnInit {
     let page: string = '0';
     this.getInfoOfAppService.getInfos_service(page)
       .subscribe(res => {
-        this.all = res[1][0].all_total;
-        console.log(this.all);
         this.pageInfo = res[1][0];
         this.anyList = res[0];
       })
@@ -104,6 +101,7 @@ export class AppComponent implements OnInit {
    * @param event 
    */
   public paginate(event) {
+    this.page = event.page;
     this.postAppsOfName(event.page);
   }
 
@@ -143,11 +141,13 @@ export class AppComponent implements OnInit {
    * 根据主题名显示该主题的图标
    * @param theme_name : 主题名
    */
-  getAppsByTheme(theme_name) {
-    this.getInfoOfAppService.getAppsByTheme_service(theme_name)
+  getAppsByTheme(theme_name, page) {
+    page = 0;
+    this.getInfoOfAppService.getAppsByTheme_service(theme_name, page)
     .subscribe (res => {
+      this.inuse_theme_name = res[1].theme_name;
       this.anyList = res[0];
-      // console.log(this.srcInfos)
+      this.pageInfo = res[2][0];
     })
   }
 

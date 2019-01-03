@@ -1,20 +1,20 @@
 import { Directive, ElementRef, HostListener, Input } from '@angular/core';
 
 @Directive({
-  selector: '[appDefaultImg]'
+  selector: '[appErrorImg]'
 })
 export class DefaultImgDirective {
 
-  @Input('defaultImg') defaultImgSrc: string;
+  @Input('appErrorImg') errorImageSrc: string;
 
   constructor(public elementRef: ElementRef) { }
 
   @HostListener('error', ['$event.target'])
   ImageError(event) {
-    if (this.defaultImgSrc) {
-      event.src = this.defaultImgSrc;
+    if (this.errorImageSrc) {
+      event.src = this.errorImageSrc;
     } else {
-      event.src = '../assets/icon/null.png';
+      event.src = '../assets/icon/default-null.png';
     }
   }
 }

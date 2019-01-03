@@ -72,9 +72,10 @@ export class GetInfoOfAppService {
    * 根据主题名获取该主题的图标
    * @param reqBody ：主题名
    */
-  getAppsByTheme_service(reqBody: any) {
+  getAppsByTheme_service(reqBody: any, page: any) {
     let theme = {
-      theme: reqBody
+      theme: reqBody,
+      page: page
     }
     return this.http.get('/api/theme', {params: theme});
   }

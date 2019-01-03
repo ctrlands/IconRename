@@ -35,9 +35,6 @@ router.get('/', function (req, res, next) {
         var per_page_total = 30; // 每页显示数量，默认为30
         var all_page_total = Math.ceil(result[0].sum / per_page_total); // 总共有多少页
         var all_total = result[0].sum; // 数据总量
-        /* if (req.query.page) {
-          current_page = parseInt(req.query.page);
-        } */
         var prev_page = current_page - 1; // 上一页
         if (current_page <= 0) {
           prev_page = 0;
@@ -86,9 +83,6 @@ router.post('/', function (req, res, next) {
         var per_page_total = 30; // 每页显示数量，默认为30
         var all_page_total = Math.ceil(result[0].sum / per_page_total); // 总共有多少页
         var all_total = result[0].sum; // 数据总量
-        /* if (req.query.page) {
-          current_page = parseInt(req.query.page);
-        } */
         var prev_page = current_page - 1; // 上一页
         if (current_page <= 0) {
           prev_page = 0;
@@ -119,7 +113,5 @@ router.post('/', function (req, res, next) {
     });
   });
 });
-
-
 
 module.exports = router;

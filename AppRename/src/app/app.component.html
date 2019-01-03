@@ -9,7 +9,7 @@
         </button>
         <div class="dropdown-menu" style="height:200px; min-width: 7rem; overflow-y:scroll;">
           <div *ngFor="let themeList of themeLists">
-            <a class="dropdown-item" (click)="getAppsByTheme(themeList?.theme_name)" style="font-size: 16px;">{{themeList?.theme_name}}</a>
+            <a class="dropdown-item" (click)="getAppsByTheme(themeList?.theme_name, page)" style="font-size: 16px;">{{themeList?.theme_name}}</a>
             <div class="dropdown-divider"></div>
           </div>
         </div>
@@ -22,7 +22,7 @@
         placeholder="请填写图标包唯一识别码">
       <button type="button" [disabled]="! theme_name" class="btn btn-primary sty_btn" data-toggle="modal" data-target="#myModal"
         (click)="setThemeName()">提交</button>
-      <span style="font-size: 14px;">当前主题：{{ getThemeName=='' ? getThemeName : 'default' }}</span>
+      <span style="font-size: 14px;">当前主题：{{ inuse_theme_name ? inuse_theme_name : 'null' }}</span>
     </div>
 
     <!-- 根据应用名称/开发者名称查询 -->
@@ -51,7 +51,7 @@
             <span hidden ngDefaultControl [(ngModel)]="operateId.id">{{cn?.app_id}}</span>
             <!-- <div *ngFor="let item of uploadImg;index as i"> -->
             <!-- <img src="" imgPreview id="{{ 'img_' + nowId.innerText}}" [image]="item?._file" [uploadId]="nowId.innerText" style="display: inline-block;" width="48" height="48"/> -->
-            <img [src]="'/api/'+cn?.src" appDefaultImg id="{{ 'img_' + nowId.innerText}}" style="display: inline-block;"
+            <img [src]="'/api/'+cn?.src" appErrorImg="../assets/icon/default-null.png" id="{{ 'img_' + nowId.innerText}}" style="display: inline-block;"
               width="96" height="96" />
             <!-- </div> -->
           </div>
@@ -64,12 +64,10 @@
     </div>
   </div>
 
+  <!-- 分页插件 -->
   <div class="row">
     <div class="m-auto">
-      <!-- <span #all>{{pageInfo | json}}</span> -->
-      <span>{{all}}</span>
-      <!-- <span>{{all.innerText}}</span> -->
-      <pagination [rows]="30" [currentPage]="pageInfo?.current_page" [totalRecords]="42" (onPageChange)="paginate($event)">
+      <pagination [pageLinkSize]="5" [rows]="30" [currentPage]="pageInfo?.current_page" [totalRecords]="pageInfo?.all_total" (onPageChange)="paginate($event)">
       </pagination>
     </div>
   </div>
