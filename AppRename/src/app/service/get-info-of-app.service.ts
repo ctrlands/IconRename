@@ -37,10 +37,11 @@ export class GetInfoOfAppService {
    * 分页应用数据信息获取
    * @param reqBody : 当前页码
    */
-  postInfos_service(reqBody:any) {
+  postInfos_service(theme,reqBody:any) {
     /* let o_post = new HttpParams().set('page',reqBody); // page=1
     return this.http.post('/api/sql', '', {params: o_post});  // 后台可通过req.query.page取得page的值*/
     let o_post = {
+      theme: theme,
       page: reqBody
     }
     return this.http.post('/api/sql', o_post); // 后台使用req.body.page取到该值。这里不设置{headers: new HttpHeaders({'Content-Type': 'application/x-www-form-urlencoded'})}

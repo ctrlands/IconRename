@@ -6,6 +6,7 @@ import { Component, EventEmitter, Input, Output, OnInit, DoCheck, OnChanges, Sim
   styleUrls: ['./pagination.component.scss']
 })
 export class PaginationComponent implements OnInit {
+  @Input() theme: any;
   @Input() totalRecords: any; // 数据总量
   @Input() rows: any = 30; // 每页显示数量
   @Input() currentPage: any; // 当前页码
@@ -32,6 +33,7 @@ export class PaginationComponent implements OnInit {
   }
 
   initDefaultValue() {
+    this.theme = this.theme ? this.theme : 'default';
     this.rows = this.rows ? this.rows : 30;
     this.pageLinkSize = this.pageLinkSize ? this.pageLinkSize : 5;
     this.currentPage = this.currentPage ? this.currentPage : 0;
@@ -42,10 +44,11 @@ export class PaginationComponent implements OnInit {
     this.pageCount = Math.ceil(this.totalRecords / this.rows);
   }
 
-  changePage(actionKey: string) {
+  changePage(theme,actionKey: string) {
     this.getCurrentPage(actionKey);
     this.getVisiblePageArr();
     let data = {
+      theme: theme,
       first: this.currentPage * this.rows,
       rows: this.rows,
       page: this.currentPage,

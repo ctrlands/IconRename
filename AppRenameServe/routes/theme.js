@@ -24,7 +24,7 @@ var responseJSON = function (res, ret) {
 router.get('/', function (req, res, next) {
   if (req.cookies.themeName) {
     // 获取前台页面传过来的参数
-    var page = req.body.page ? req.body.page : 0;
+    var page = req.query.page ? req.query.page : 0;
     var pageTotalSql = 'SELECT COUNT(*) AS sum FROM apps_name';
     pool.getConnection((err, connection) => {
       if (err) {
@@ -56,8 +56,6 @@ router.get('/', function (req, res, next) {
             var theme_sql = `SELECT theme.theme_name, app.app_id, app.pkg_name, app.cn_name, src.src_resource FROM apps_name AS app, theme_name AS theme, src_info AS src where src.theme_id = theme.theme_id AND src.app_id = app.app_id AND theme.theme_name = '${theme}' LIMIT ${per_page_total} OFFSET ${off}`;
 
             // 查询已完成图标
-            var theme = req.query.theme;
-            // console.log(req.cookies.themeName);
             connection.query(theme_sql, {
               theme,
               page
@@ -100,7 +98,7 @@ router.get('/', function (req, res, next) {
       maxAge: 20 * 1000 * 60
     });
     // 获取前台页面传过来的参数
-    var page = req.body.page ? req.body.page : 0;
+    var page = req.query.page ? req.query.page : 0;
     var pageTotalSql = 'SELECT COUNT(*) AS sum FROM apps_name';
     pool.getConnection((err, connection) => {
       if (err) {
@@ -127,13 +125,10 @@ router.get('/', function (req, res, next) {
 
             var pageQuerySql = 'SELECT * FROM apps_name LIMIT ' + per_page_total + ' OFFSET ' + per_page_total * current_page;
 
-            // var theme = req.query.theme;
             var off = per_page_total * current_page;
             var theme_sql = `SELECT theme.theme_name, app.app_id, app.pkg_name, app.cn_name, src.src_resource FROM apps_name AS app, theme_name AS theme, src_info AS src where src.theme_id = theme.theme_id AND src.app_id = app.app_id AND theme.theme_name = '${theme}' LIMIT ${per_page_total} OFFSET ${off}`;
 
             // 查询已完成图标
-            var theme = req.query.theme;
-            // console.log(req.cookies.themeName);
             connection.query(theme_sql, {
               theme,
               page
@@ -165,6 +160,7 @@ router.get('/', function (req, res, next) {
                 connection.release();
               }
             })
+
           }
         })
       }

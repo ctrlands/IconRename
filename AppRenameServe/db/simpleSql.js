@@ -15,6 +15,8 @@ var simpleSql = {
 
   getThemeNameByName: 'SELECT * FROM theme_name WHERE theme_name = ?',
 
+  getThemeNameById: 'SELECT * FROM theme_name WHERE theme_id = ?',
+
   setAppName: 'INSERT INTO src_info(app_id, theme_id, src_resource) value(?,?,?)',
 
   countQueryApps: 'SELECT COUNT(*) AS sum FROM apps_name WHERE CONCAT(IFNULL(cn_name,""),IFNULL(company,"")) like ?',
@@ -38,6 +40,8 @@ var simpleSql = {
  * setThemeName: 设置主题唯一识别码，便于关联主题与图标
  * 
  * getThemeIdByName: 根据主题名称查询主题Id
+ * 
+ * getThemeNameById: 根据主题id查询主题信息
  * 
  * getThemeName: 获取当前主题
  * 

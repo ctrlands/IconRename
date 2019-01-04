@@ -22,7 +22,7 @@
         placeholder="请填写图标包唯一识别码">
       <button type="button" [disabled]="! theme_name" class="btn btn-primary sty_btn" data-toggle="modal" data-target="#myModal"
         (click)="setThemeName()">提交</button>
-      <span style="font-size: 14px;">当前主题：{{ inuse_theme_name ? inuse_theme_name : 'null' }}</span>
+      <span style="font-size: 14px;" #nowtheme>当前主题：{{ inuse_theme_name ? inuse_theme_name : 'null' }}</span>
     </div>
 
     <!-- 根据应用名称/开发者名称查询 -->
@@ -38,20 +38,20 @@
     </div>
   </div>
 
-  <div class="row">
+  <div class="row" *ngIf="inuse_theme_name">
     <div class="col-md-2" *ngFor="let cn of anyList;index as j" id="{{'wrapper_'+cn.app_id}}">
       <div class="top">
         <div class="top_left" style="display:inline-flex; margin-left: 15px;">
           <img src="../assets/icon/{{cn.pkg_name}}.png" width="96" height="96">
         </div>
         <div class="top_right" style="display:inline-flex;margin-left: 35px;vertical-align: top;">
-          <div class="nullblock" id="{{ 'id' + cn.app_id}}" ng2FileDrop (fileOver)="fileOverBase(nowId.innerText,$event)"
+          <div class="nullblock" [ngClass]="{'activeImg': cn?.src }" id="{{ 'id' + cn.app_id}}" ng2FileDrop (fileOver)="fileOverBase(nowId.innerText,$event)"
             (onFileDrop)="fileDropOver(nowId.innerText,$event)" [uploader]="uploader">
             <span #nowId hidden>{{cn?.app_id}}</span>
             <span hidden ngDefaultControl [(ngModel)]="operateId.id">{{cn?.app_id}}</span>
             <!-- <div *ngFor="let item of uploadImg;index as i"> -->
             <!-- <img src="" imgPreview id="{{ 'img_' + nowId.innerText}}" [image]="item?._file" [uploadId]="nowId.innerText" style="display: inline-block;" width="48" height="48"/> -->
-            <img [src]="'/api/'+cn?.src" appErrorImg="../assets/icon/default-null.png" id="{{ 'img_' + nowId.innerText}}" style="display: inline-block;"
+            <img [src]="'/api'+cn?.src" appErrorImg="../assets/icon/default-null.png" id="{{ 'img_' + nowId.innerText}}" style="display: inline-block;"
               width="96" height="96" />
             <!-- </div> -->
           </div>
@@ -65,16 +65,16 @@
   </div>
 
   <!-- 分页插件 -->
-  <div class="row">
+  <div class="row" *ngIf="inuse_theme_name">
     <div class="m-auto">
-      <pagination [pageLinkSize]="5" [rows]="30" [currentPage]="pageInfo?.current_page" [totalRecords]="pageInfo?.all_total" (onPageChange)="paginate($event)">
+      <pagination [pageLinkSize]="5" [rows]="30" [theme]="inuse_theme_name" [currentPage]="pageInfo?.current_page" [totalRecords]="pageInfo?.all_total" (onPageChange)="paginate(inuse_theme_name, $event)">
       </pagination>
     </div>
   </div>
 
 
   <!-- 模态框（Modal） -->
-  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div *ngIf="false" class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header" style="display: inline-block;">

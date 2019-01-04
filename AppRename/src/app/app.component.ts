@@ -79,7 +79,8 @@ export class AppComponent implements OnInit {
     let page: string = '0';
     this.getInfoOfAppService.getInfos_service(page)
       .subscribe(res => {
-        this.pageInfo = res[1][0];
+        this.inuse_theme_name = res[1].theme_name;
+        this.pageInfo = res[2];
         this.anyList = res[0];
       })
   }
@@ -88,11 +89,11 @@ export class AppComponent implements OnInit {
    * 模糊查询app信息根据应用名称/应用开发商名称
    * @param page 
    */
-  public postAppsOfName(page): void {
-    this.getInfoOfAppService.postInfos_service(page)
+  public postAppsOfName(theme, page): void {
+    this.getInfoOfAppService.postInfos_service(theme, page)
       .subscribe(res => {
         this.anyList = res[0];
-        this.pageInfo = res[1][0];
+        this.pageInfo = res[2][0];
       })
   }
 
@@ -100,9 +101,10 @@ export class AppComponent implements OnInit {
    * 分页
    * @param event 
    */
-  public paginate(event) {
+  public paginate(theme, event) {
     this.page = event.page;
-    this.postAppsOfName(event.page);
+    this.inuse_theme_name = theme;
+    this.postAppsOfName(theme, event.page);
   }
 
   /**
@@ -122,8 +124,9 @@ export class AppComponent implements OnInit {
   public searchKeyword() {
     this.getInfoOfAppService.postQueryApps(this.search_keyword)
       .subscribe(res => {
+        this.inuse_theme_name = res[1].theme_name;
         this.anyList = res[0];
-        this.pageInfo = res[1][0];
+        this.pageInfo = res[2][0];
       })
   }
 
@@ -159,9 +162,10 @@ export class AppComponent implements OnInit {
    * 
    */
   public fileOverBase(id, event) {
+    let tname = this.inuse_theme_name;
     this.uploader.onBuildItemForm = function (fileItem, form) {
       form.append('nowid', id); // 当前图标app_id或者当前ng2-file-upload对应div
-      form.append('themeName', '10000'); // 当前图标包对应主题名称
+      form.append('themeName', tname); // 当前图标包对应主题名称
     }
   }
 

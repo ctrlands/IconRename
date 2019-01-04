@@ -1,15 +1,15 @@
 <!-- 参考链接 https://segmentfault.com/q/1010000010999220 -->
 <ul class="pageUi clear">
-  <li (click)="changePage('first')" class="fa fa-angle-double-left" [ngClass]="{'disable': pageValidation.isFirst}">首页
+  <!-- <li (click)="changePage('first')" class="fa fa-angle-double-left" [ngClass]="{'disable': pageValidation.isFirst}">首页
   </li>
   <li (click)="changePage('pre')" class="fa fa-angle-left" [ngClass]="{'disable': pageValidation.isFirst}">上一页
+  </li> -->
+  <li (click)="changePage(theme,page)" *ngFor="let page of pageArr" [ngClass]="{'active': page == currentPage}">{{page + 1}}
   </li>
-  <li (click)="changePage(page)" *ngFor="let page of pageArr" [ngClass]="{'active': page == currentPage}">{{page + 1}}
-  </li>
-  <li (click)="changePage('next')" class="fa fa-angle-right" [ngClass]="{'disable': pageValidation.isLast}">下一页
+  <!-- <li (click)="changePage('next')" class="fa fa-angle-right" [ngClass]="{'disable': pageValidation.isLast}">下一页
   </li>
   <li (click)="changePage('last')" class="fa fa-angle-double-right" [ngClass]="{'disable': pageValidation.isLast}">尾页
-  </li>
+  </li> -->
 </ul>
 <!-- <ul class="pagination own_pagination">
   <li class="page-item" [class.disabled]="currentPage < 1">
