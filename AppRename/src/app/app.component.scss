@@ -1,3 +1,7 @@
+.top_position {
+  margin-top: 23px;
+  margin-bottom: 23px;
+}
 .nullblock {
   border: 3px dotted lightgray;
   width: 96px;
@@ -17,6 +21,9 @@
   width: 90px;
   margin: 0 10px;
   font-size: 14px;
+}
+.dropdown-item {
+  cursor: pointer;
 }
 .dropdown-menu::-webkit-scrollbar {
   display: none;

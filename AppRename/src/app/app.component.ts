@@ -1,4 +1,4 @@
-import { Component,enableProdMode, Input, OnInit, ElementRef, Renderer2, ViewChild, isDevMode } from '@angular/core';
+import { Component, enableProdMode, Input, OnInit, ElementRef, Renderer2, ViewChild, isDevMode } from '@angular/core';
 enableProdMode();
 import { HttpClient } from '@angular/common/http';
 
@@ -18,13 +18,16 @@ import { PageInfo } from './class/page-info';
 
 export class AppComponent implements OnInit {
   @Input() nowId: number;
-  
+
 
 
   public inuse_theme_name: string;
 
   public theme_name: string;
-  public search_keyword: string;
+
+  public search_keyword: string; // 应用名称/应用开发商模糊查询
+
+  public search_keywordOfTheme: string; // 主题名称查询
 
   public uploadImg: any;
 
@@ -86,19 +89,19 @@ export class AppComponent implements OnInit {
   }
 
   /**
-   * 模糊查询app信息根据应用名称/应用开发商名称
+   * 分页获取信息
    * @param page 
    */
   public postAppsOfName(theme, page): void {
     this.getInfoOfAppService.postInfos_service(theme, page)
       .subscribe(res => {
         this.anyList = res[0];
-        this.pageInfo = res[2][0];
+        this.pageInfo = res[2];
       })
   }
 
   /**
-   * 分页
+   * 分页插件-分页事件
    * @param event 
    */
   public paginate(theme, event) {
@@ -113,21 +116,43 @@ export class AppComponent implements OnInit {
   public setThemeName() {
     this.getInfoOfAppService.postSetThemeName(this.theme_name)
       .subscribe(res => {
+
         this.addThemeNameMsg = '';
         this.addThemeNameMsg = res[0].msg;
         if (res[0].code == '200') {
+          this.inuse_theme_name = res[3].theme_name;
+          this.anyList = res[1];
+          this.pageInfo = res[2];
           this.getThemeList();
+          this.theme_name = '';
         }
       })
   }
 
-  public searchKeyword() {
+  /**
+   * 根据应用名称或应用开发商模糊查询应用信息
+   */
+  public searchKeywordOfApp() {
     this.getInfoOfAppService.postQueryApps(this.search_keyword)
+      .subscribe(res => {
+        // this.inuse_theme_name = res[1].theme_name;
+        this.anyList = res[0];
+        this.pageInfo = res[1];
+      })
+  }
+
+  /**
+   * 根据主题名查询
+   */
+  public searchKeywordOfTheme() {
+    let page = 0;
+    this.getInfoOfAppService.getAppsByTheme_service(this.search_keywordOfTheme, page)
       .subscribe(res => {
         this.inuse_theme_name = res[1].theme_name;
         this.anyList = res[0];
         this.pageInfo = res[2][0];
       })
+
   }
 
   /**
@@ -135,23 +160,23 @@ export class AppComponent implements OnInit {
    */
   public getThemeList() {
     this.getInfoOfAppService.getThemeList_service()
-    .subscribe( res => {
-      this.themeLists = res[0];
-    })
+      .subscribe(res => {
+        this.themeLists = res[0];
+      })
   }
 
   /**
-   * 根据主题名显示该主题的图标
+   * 根据主题名显示该主题的图标-左侧主题下拉列表点击事件
    * @param theme_name : 主题名
    */
   getAppsByTheme(theme_name, page) {
     page = 0;
     this.getInfoOfAppService.getAppsByTheme_service(theme_name, page)
-    .subscribe (res => {
-      this.inuse_theme_name = res[1].theme_name;
-      this.anyList = res[0];
-      this.pageInfo = res[2][0];
-    })
+      .subscribe(res => {
+        this.inuse_theme_name = res[1].theme_name;
+        this.anyList = res[0];
+        this.pageInfo = res[2][0];
+      })
   }
 
 
@@ -206,7 +231,7 @@ export class AppComponent implements OnInit {
           console.log('错误！')
         }
       };
-      
+
       this.uploader.queue[0].upload(); // 开始上传
     }
   }

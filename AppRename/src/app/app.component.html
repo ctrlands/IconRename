@@ -1,5 +1,5 @@
 <div class="container-fluid">
-  <div class="row" id='ad'>
+  <div class="row top_position" id='ad'>
 
     <!-- 主题列表选择 -->
     <div class="col-md-3">
@@ -28,13 +28,13 @@
     <!-- 根据应用名称/开发者名称查询 -->
     <div class="col-md-3">
       <input type="text" class="form-control sty_input" [(ngModel)]="search_keyword" name="search_keyword" placeholder="应用名称/开发者名称">
-      <button type="button" [disabled]="! search_keyword" class="btn btn-primary sty_btn" (click)="searchKeyword()">查询</button>
+      <button type="button" [disabled]="! search_keyword" class="btn btn-primary sty_btn" (click)="searchKeywordOfApp()">查询</button>
     </div>
 
     <!-- 根据主题名查询 -->
     <div class="col-md-3">
-      <input type="text" class="form-control sty_input" [(ngModel)]="search_keyword" name="search_keyword" placeholder="主题名">
-      <button type="button" [disabled]="! search_keyword" class="btn btn-primary sty_btn" (click)="searchKeyword()">查询</button>
+      <input type="text" class="form-control sty_input" [(ngModel)]="search_keywordOfTheme" name="search_keyword" placeholder="主题名">
+      <button type="button" [disabled]="! search_keywordOfTheme" class="btn btn-primary sty_btn" (click)="searchKeywordOfTheme()">查询</button>
     </div>
   </div>
 
@@ -65,7 +65,7 @@
   </div>
 
   <!-- 分页插件 -->
-  <div class="row" *ngIf="inuse_theme_name">
+  <div class="row top_position" *ngIf="inuse_theme_name">
     <div class="m-auto">
       <pagination [pageLinkSize]="5" [rows]="30" [theme]="inuse_theme_name" [currentPage]="pageInfo?.current_page" [totalRecords]="pageInfo?.all_total" (onPageChange)="paginate(inuse_theme_name, $event)">
       </pagination>
@@ -74,7 +74,7 @@
 
 
   <!-- 模态框（Modal） -->
-  <div *ngIf="false" class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div *ngIf="inuse_theme_name" class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header" style="display: inline-block;">

@@ -23,7 +23,9 @@ var responseJSON = function (res, ret) {
 /* 获取当前theme GET. */
 router.get('/', function (req, res, next) {
   if (req.cookies.themeName) {
-    // 获取前台页面传过来的参数
+    console.log('12138888888');
+
+    /* // 获取前台页面传过来的参数
     var page = req.query.page ? req.query.page : 0;
     var pageTotalSql = 'SELECT COUNT(*) AS sum FROM apps_name';
     pool.getConnection((err, connection) => {
@@ -90,7 +92,7 @@ router.get('/', function (req, res, next) {
           }
         })
       }
-    })
+    }) */
 
   } else {
     var theme = req.query.theme;
@@ -168,75 +170,6 @@ router.get('/', function (req, res, next) {
 
   }
 
-
-
-
-  // if (req.cookies.themeName) {
-  //   pool.getConnection((err, connection) => {
-  //     if (err) {
-  //       res.send('数据库连接错误！' + err).end();
-  //       connection.release();
-  //     } else {
-  //       var theme = req.query.theme;
-  //       console.log(req.cookies.themeName);
-  //       connection.query(simpleSql.getAppsByThemeName, theme, (qryerr, result) => {
-  //         if (qryerr) {
-  //           res.send('sql语法错误！' + qryerr).end();
-  //           connection.release();
-  //         } else {
-  //           connection.query(simpleSql.queryAll, '', (qry1err, allresult) => {
-  //             for (let i = 0; i < allresult.length; i++) {
-  //               for (let j = 0; j < result.length; j++) {
-  //                 if (result[j].app_id == allresult[i].app_id) {
-  //                   allresult[i].src = result[j].src_resource;
-  //                 }
-  //               }
-  //             }
-  //             var tname = {
-  //               theme_name: theme
-  //             }
-  //             res.json([allresult, tname]);
-  //           })
-  //           connection.release();
-  //         }
-  //       })
-  //     }
-  //   })
-
-  // } else {
-  //   pool.getConnection((err, connection) => {
-  //     if (err) {
-  //       res.send('数据库连接错误！' + err).end();
-  //       connection.release();
-  //     } else {
-  //       var theme = req.query.theme;
-  //       res.cookie('inUseOfThemeName', theme, {
-  //         maxAge: 20 * 1000 * 60
-  //       });
-  //       connection.query(simpleSql.getAppsByThemeName, theme, (qryerr, result) => {
-  //         if (qryerr) {
-  //           res.send('sql语法错误！' + qryerr).end();
-  //           connection.release();
-  //         } else {
-  //           connection.query(simpleSql.queryAll, '', (qry1err, allresult) => {
-  //             for (let i = 0; i < allresult.length; i++) {
-  //               for (let j = 0; j < result.length; j++) {
-  //                 if (result[j].app_id == allresult[i].app_id) {
-  //                   allresult[i].src = result[j].src_resource;
-  //                 }
-  //               }
-  //             }
-  //             var tname = {
-  //               theme_name: theme
-  //             }
-  //             res.json([allresult, tname]);
-  //           })
-  //           connection.release();
-  //         }
-  //       })
-  //     }
-  //   })
-  // }
 });
 
 
@@ -245,7 +178,7 @@ router.post('/', function (req, res, next) {
   // 从连接池获取连接
   pool.getConnection(function (err, connection) {
     if (err) {
-      res.send('数据库连接错误' + err);
+      res.send('数据库连接错误' + err).end();
       connection.release();
     } else {
 
@@ -273,19 +206,63 @@ router.post('/', function (req, res, next) {
                 res.send('sql语法错误' + qryerr1).end(); // 数据库连接异常
                 connection.release();
               } else {
-                /* var toFrontData = [{
-                  all_total: all_total,
-                  prev_page: prev_page,
-                  next_page: next_page,
-                  current_page: current_page,
-                  all_page_total: all_page_total
-                }] */
-                msg.code = '200';
-                msg.msg = '创建新主题成功！';
-                req.session['themeName'] = theme_name;
-                // console.log(req.session);
-                res.json([msg]).end();
-                connection.release();
+
+                // 获取前台页面传过来的参数
+                var page = 0;
+                // 建立连接, 分页查询
+                var pageTotalSql = 'SELECT COUNT(*) AS sum FROM apps_name';
+                connection.query(pageTotalSql, '', function (err, result) {
+                  if (err) {
+                    res.send(err).end(); // 数据库连接异常
+                  } else {
+                    var current_page = page; // 当前页码，默认为0
+                    var per_page_total = 30; // 每页显示数量，默认为30
+                    var all_page_total = Math.ceil(result[0].sum / per_page_total); // 总共有多少页
+                    var all_total = result[0].sum; // 数据总量
+                    var prev_page = current_page - 1; // 上一页
+                    if (current_page <= 0) {
+                      prev_page = 0;
+                      current_page = 0;
+                    }
+                    var next_page = current_page + 1; // 下一页
+                    if (next_page >= all_page_total) {
+                      next_page = all_page_total;
+                    }
+
+                    var pageQuerySql = 'SELECT * FROM apps_name LIMIT ' + per_page_total + ' OFFSET ' + per_page_total * current_page;
+                    connection.query(pageQuerySql, page, function (err, datas) {
+                      if (err) {
+                        res.send(err).end(); // 数据库连接异常
+                      } else {
+                        // req.cookies.inUseOfThemeName = theme_name;
+                        
+                        res.cookie('inUseOfThemeName', theme_name, {
+                          maxAge: 20 * 1000 * 60
+                        });
+                        msg.code = '200';
+                        msg.msg = '创建新主题成功！';
+                        var toFrontData = {
+                          all_total: all_total,
+                          prev_page: prev_page,
+                          next_page: next_page,
+                          current_page: current_page,
+                          all_page_total: all_page_total
+                        }
+                        var t_name = {
+                          theme_name: theme_name
+                        }
+                        res.json([msg, datas, toFrontData, t_name]).end();
+                        connection.release();
+                      }
+                    })
+                  }
+                });
+
+
+                // req.session['themeName'] = theme_name;
+
+                // res.json([msg]).end();
+                // connection.release();
               }
             });
           }

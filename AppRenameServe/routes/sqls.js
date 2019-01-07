@@ -107,6 +107,8 @@ router.post('/', (req, res, next) => {
             let theme_name = req.cookies.inUseOfThemeName; // 当前主题名称, 从cookie中获取
             let offset_num = per_page_total * current_page; // 数据偏移量
 
+
+
             if (current_page <= 0) {
               prev_page = 0;
               current_page = 0;
@@ -118,42 +120,62 @@ router.post('/', (req, res, next) => {
 
             let appInfoSql = 'SELECT * FROM apps_name LIMIT ' + per_page_total + ' OFFSET ' + per_page_total * current_page; // 每次查询30条应用数据信息
 
-            let theme_IconDone_sql = `SELECT theme.theme_name, app.app_id, app.pkg_name, app.cn_name, src.src_resource FROM apps_name AS app, theme_name AS theme, src_info AS src where src.theme_id = theme.theme_id AND src.app_id = app.app_id AND theme.theme_name = '${theme_name}' LIMIT ${per_page_total} OFFSET ${offset_num}`;
+            let theme_IconDone_CountSql = `SELECT COUNT(theme.theme_name) AS doneIconSum FROM apps_name AS app, theme_name AS theme, src_info AS src where src.theme_id = theme.theme_id AND src.app_id = app.app_id AND theme.theme_name = '${theme_name}' LIMIT ${per_page_total} OFFSET ${offset_num}`;
 
-            // 查询已完成图标
-            connection.query(theme_IconDone_sql, '', (errOfApp, resultOfApp) => {
-              if (errOfApp) {
-                res.send('sql语法错误！' + errOfApp).end();
+            connection.query(theme_IconDone_CountSql, '', (errOfIconDoneCount, resultOfIconDoneCount) => {
+              if (errOfIconDoneCount) {
+                res.send('mysql异常！' + errOfIconDoneCount).end();
                 connection.release();
               } else {
-                connection.query(appInfoSql, page, (errOfTheme, resultOfTheme) => {
-                  if (errOfTheme) {
-                    res.send('sql语法错误！' + errOfTheme).end();
+                if (resultOfIconDoneCount.length < 1) {
+                  offset_num = 0;
+                }
+
+                let theme_IconDone_sql = `SELECT theme.theme_name, app.app_id, app.pkg_name, app.cn_name, src.src_resource FROM apps_name AS app, theme_name AS theme, src_info AS src where src.theme_id = theme.theme_id AND src.app_id = app.app_id AND theme.theme_name = '${theme_name}' LIMIT ${per_page_total} OFFSET ${offset_num}`;
+
+                // 查询已完成图标
+                connection.query(theme_IconDone_sql, '', (errOfApp, resultOfApp) => {
+                  if (errOfApp) {
+                    res.send('sql语法错误！' + errOfApp).end();
                     connection.release();
                   } else {
-                    for (let i = 0; i < resultOfTheme.length; i++) {
-                      for (let j = 0; j < resultOfApp.length; j++) {
-                        if (resultOfApp[j].app_id == resultOfTheme[i].app_id) {
-                          resultOfTheme[i].src = resultOfApp[j].src_resource;
+                    connection.query(appInfoSql, page, (errOfTheme, resultOfTheme) => {
+                      if (errOfTheme) {
+                        res.send('sql语法错误！' + errOfTheme).end();
+                        connection.release();
+                      } else {
+                        for (let i = 0; i < resultOfTheme.length; i++) {
+                          for (let j = 0; j < resultOfApp.length; j++) {
+                            if (resultOfApp[j].app_id == resultOfTheme[i].app_id) {
+                              resultOfTheme[i].src = resultOfApp[j].src_resource;
+                            }
+                          }
                         }
+                        let themeNameInfo = {
+                          theme_name: req.cookies.inUseOfThemeName
+                        };
+                        let pageInfo = {
+                          all_total: all_total,
+                          prev_page: prev_page,
+                          next_page: next_page,
+                          current_page: current_page,
+                          all_page_total: all_page_total
+                        };
+                        res.json([resultOfTheme, themeNameInfo, pageInfo]);
+                        connection.release();
                       }
-                    }
-                    let themeNameInfo = {
-                      theme_name: req.cookies.inUseOfThemeName
-                    };
-                    let pageInfo = {
-                      all_total: all_total,
-                      prev_page: prev_page,
-                      next_page: next_page,
-                      current_page: current_page,
-                      all_page_total: all_page_total
-                    };
-                    res.json([resultOfTheme, themeNameInfo, pageInfo]);
-                    connection.release();
+                    })
                   }
                 })
+
               }
             })
+
+
+
+
+
+
           }
         })
       }

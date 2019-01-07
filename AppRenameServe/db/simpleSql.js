@@ -5,6 +5,8 @@ var simpleSql = {
 
   queryApps: 'SELECT * FROM apps_name WHERE CONCAT(IFNULL(cn_name,""),IFNULL(company,"")) like ?',
 
+  queryAppsIconDone: 'SELECT * FROM apps_name AS app, theme_name AS theme, src_info AS src WHERE CONCAT(IFNULL(app.cn_name,""),IFNULL(app.company,"")) like ? AND src.theme_id = theme.theme_id AND src.app_id = app.app_id AND theme.theme_name = ?',
+
   getAppNameById: 'SELECT pkg_name FROM apps_name WHERE app_id = ?',
 
   isDuplicateThemeName: 'SELECT theme_id FROM theme_name where theme_name = ?',
@@ -32,6 +34,8 @@ var simpleSql = {
  * queryAll: 查询所有数据, 目前在首页打开时调用, 后期首页打开时改为分页查询接口
  * 
  * queryApps: 根据app应用名称及应用开发商查询接口
+ * 
+ * queryAppsIconDone: 查询图标数据中已经制作的图标
  * 
  * getAppNameById: 根据id查询app的应用包名
  * 

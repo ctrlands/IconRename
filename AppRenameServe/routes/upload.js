@@ -1,19 +1,19 @@
-var express = require('express');
-var router = express.Router();
+let express = require('express');
+let router = express.Router();
 
 // 导入文件上传模块
-var fs = require('fs');
-var multer = require('multer');
+let fs = require('fs');
+let multer = require('multer');
 
 // 导入MySQL模块
-var mysql = require('mysql');
-var dbConfig = require('../db/config');
-var simpleSql = require('../db/simpleSql');
+let mysql = require('mysql');
+let dbConfig = require('../db/config');
+let simpleSql = require('../db/simpleSql');
 // 创建一个msql连接池
-var pool = mysql.createPool(dbConfig.mysql);
+let pool = mysql.createPool(dbConfig.mysql);
 
-var thmemName = 'default';
-var uploadFolder = 'D:/upload';
+let thmemName = 'default';
+let uploadFolder = 'D:/upload';
 
 /**
  * 根据app_id获取app信息
@@ -62,7 +62,7 @@ function getThemeNameById(id, _callback) {
 }
 
 // 创建文件夹
-var createFolder = function (folder) {
+let createFolder = function (folder) {
   try {
     // 测试path指定的文件或目录的用户权限，我们用来检测文件是否存在
     // 如果文件路径不存在将会抛出错误'no such file or directory'
@@ -75,7 +75,6 @@ var createFolder = function (folder) {
 
 function getThemeByName(themeName, _callback) {
   if (themeName == '' || themeName == 'null') {
-    console.log('主题名为空！');
     _callback('themeName null');
   } else {
     pool.getConnection(function (err, connection) {
@@ -95,14 +94,12 @@ function getThemeByName(themeName, _callback) {
 }
 
 /* 使用硬盘存储模式设置存放接收到的文件的路径及文件名 */
-var storage = multer.diskStorage({
+let storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    console.log('主题名-----'+req.body.themeName);
     // 接受到文件后输出的保存路径(若不存在则需要创建)
     if (req.body.themeName != '' && req.body.themeName) {
       getThemeByName(req.body.themeName, function (result) {
-        console.log(result);
-        uploadFolder = 'D:/upload/'+result;
+        uploadFolder = 'D:/upload/' + result;
         cb(null, uploadFolder);
       })
     } else {
@@ -123,19 +120,17 @@ var storage = multer.diskStorage({
 
 
 // 创建multer对象
-var upload = multer({
+let upload = multer({
   storage: storage
 });
 
 /* post upload listing. */
 router.post('/', upload.single('uploadedfile'), function (req, res, next) {
-  var file = req.file;
+  let file = req.file;
   // 接收文件成功后返回数据给前端
-  var themeName = req.body.themeName; // 主题名称
-  var id = req.body.nowid; // 图标id
-  var srcResource = '/default/' + themeName + '/' + file.filename;
-  // var srcResource = '/default/default/' + file.filename;
-
+  let themeName = req.body.themeName; // 主题名称
+  let id = req.body.nowid; // 图标id
+  let srcResource = '/default/' + themeName + '/' + file.filename;
 
   pool.getConnection(function (err, connection) {
     if (err) {
@@ -146,17 +141,19 @@ router.post('/', upload.single('uploadedfile'), function (req, res, next) {
         if (qyyerr1) {
           return err;
         } else {
-          var theme_id = resultOfTheme[0].theme_id; // 获取到当前主题id
-          var countSql = `SELECT COUNT(src_resource) AS src_count FROM src_info WHERE app_id = ${id} AND theme_id = ${theme_id}`;
+          let theme_id = resultOfTheme[0].theme_id; // 获取到当前主题id
+          let countSql = `SELECT COUNT(src_resource) AS src_count FROM src_info WHERE app_id = '${id}' AND theme_id = '${theme_id}'`;
           connection.query(countSql, '', (errOfCount, resultOfCount) => {
             if (errOfCount) {
               res.send(err).end();
+              connection.release();
             } else {
-              if (resultOfCount[0].src_count > 1) {
-                var replaceSql = `UPDATE src_info SET src_resource = ${srcResource} WHERE app_id = ${id} AND theme_id = ${theme_id}`; // 替换
+              if (resultOfCount[0].src_count >= 1) {
+                let replaceSql = `UPDATE src_info SET src_resource = '${srcResource}' WHERE app_id = '${id}' AND theme_id = '${theme_id}'`; // 替换
                 connection.query(replaceSql, '', function (err, resultOfUpdate) {
                   if (err) {
-                    return err;
+                    res.send(err).end();
+                    connection.release();
                   } else {
                     res.json({
                       res_name: file.filename,
@@ -167,10 +164,11 @@ router.post('/', upload.single('uploadedfile'), function (req, res, next) {
                 })
               } else {
                 // 新增
-                var it = `INSERT INTO src_info(app_id, theme_id, src_resource) value('${id}', '${theme_id}', '${srcResource}')`;
-                connection.query(it, '', function (err, resultOfAdd) {
+                let addsql = `INSERT INTO src_info(app_id, theme_id, src_resource) value('${id}', '${theme_id}', '${srcResource}')`;
+                connection.query(addsql, '', (err, result) => {
                   if (err) {
-                    return err;
+                    res.send(err).end();
+                    connection.release();
                   } else {
                     res.json({
                       res_name: file.filename,
@@ -179,27 +177,14 @@ router.post('/', upload.single('uploadedfile'), function (req, res, next) {
                     connection.release(); // 释放连接池
                   }
                 })
-
               }
-
             }
-
           });
-
-
         }
-
       });
-
-
-
     }
   });
 
-
-  // res.json({
-  //   res_name: file.filename
-  // });
 });
 
 
