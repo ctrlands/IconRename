@@ -19,6 +19,8 @@ var nullRouter = require('./routes/null');
 
 var queryRouter = require('./routes/query');
 
+var cmsRouter = require('./routes/cms');
+
 var app = express();
 
 // 允许跨域设置
@@ -85,9 +87,11 @@ app.use('/theme', themeRouter);
 app.use('/themeList', themeListRouter);
 app.use('/query', queryRouter);
 
-app.use('/upload', uploadRouter)
+app.use('/upload', uploadRouter);
 
-app.use('/null', nullRouter)
+app.use('/null', nullRouter);
+
+app.use('/cms', cmsRouter);
 
 app.use((req, res, next) => {
   if (req.cookies.isTheme) {

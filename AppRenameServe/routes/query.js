@@ -22,7 +22,7 @@ router.post('/', function (req, res, next) {
     // 获取前台页面传过来的参数
 
     let theme_name = req.cookies.inUseOfThemeName; // 当前使用主题
-    let query_keyword = req.body.query_keyword;
+    let query_keyword = req.body.query_keyword; // 前台传来的查询关键词
     // 建立连接, 分页查询
     // let countSql = `SELECT COUNT(*) AS sum FROM apps_name WHERE CONCAT(IFNULL(cn_name,""),IFNULL(company,"")) like "%${query_keyword}%"`;
     let current_page = 0; // 当前页码，默认为0

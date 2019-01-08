@@ -1,0 +1,102 @@
+<div class="container-fluid">
+    <div class="row top_position" id='ad'>
+  
+      <!-- 主题列表选择 -->
+      <div class="col-md-2">
+        <div class="dropdown">
+          <button type="button" class='btn btn-primary dropdown-toggle' data-toggle='dropdown' style="font-size: 14px; min-width: 7rem;">
+            选择主题
+          </button>
+          <div class="dropdown-menu" style="height:200px; min-width: 7rem; overflow-y:scroll;">
+            <div *ngFor="let themeList of themeLists">
+              <a class="dropdown-item" (click)="getAppsByTheme(themeList?.theme_name, page)" style="font-size: 16px;">{{themeList?.theme_name}}</a>
+              <div class="dropdown-divider"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- 新增主题名 -->
+      <div class="col-md-3">
+        <input type="text" #iptThemeName class="form-control sty_input" [(ngModel)]="theme_name" name="theme_name"
+          placeholder="请填写图标包唯一识别码">
+        <button type="button" [disabled]="! theme_name" class="btn btn-primary sty_btn" data-toggle="modal" data-target="#myModal"
+          (click)="setThemeName()">提交</button>
+        <span style="font-size: 14px;" #nowtheme>当前主题：{{ inuse_theme_name ? inuse_theme_name : 'null' }}</span>
+      </div>
+  
+      <!-- 根据应用名称/开发者名称查询 -->
+      <div class="col-md-3">
+        <input type="text" class="form-control sty_input" [(ngModel)]="search_keyword" name="search_keyword" placeholder="应用名称/开发者名称">
+        <button type="button" [disabled]="! search_keyword" class="btn btn-primary sty_btn" (click)="searchKeywordOfApp()">查询</button>
+      </div>
+  
+      <!-- 根据主题名查询 -->
+      <div class="col-md-3">
+        <input type="text" class="form-control sty_input" [(ngModel)]="search_keywordOfTheme" name="search_keyword"
+          placeholder="主题名">
+        <button type="button" [disabled]="! search_keywordOfTheme" class="btn btn-primary sty_btn" (click)="searchKeywordOfTheme()">查询</button>
+      </div>
+  
+      <!-- 跳转后台管理界面 -->
+      <div class="col-md-1">
+        <a routerLink="/cms" target="_blank">CMS</a>
+      </div>
+    </div>
+  
+  
+    <div class="row" *ngIf="inuse_theme_name">
+      <div class="col-md-2" *ngFor="let cn of anyList;index as j" id="{{'wrapper_'+cn.app_id}}">
+        <div class="top">
+          <div class="top_left" style="display:inline-flex; margin-left: 15px;">
+            <img src="../assets/icon/{{cn.pkg_name}}.png" width="96" height="96" style="border-radius: 23px;">
+          </div>
+          <div class="top_right" style="display:inline-flex;margin-left: 35px;vertical-align: top;">
+            <div class="nullblock" [ngClass]="{'activeImg': cn?.src }" id="{{ 'id' + cn.app_id}}" ng2FileDrop (fileOver)="fileOverBase(nowId.innerText,$event)"
+              (onFileDrop)="fileDropOver(nowId.innerText,$event)" [uploader]="uploader">
+              <span #nowId hidden>{{cn?.app_id}}</span>
+              <span hidden ngDefaultControl [(ngModel)]="operateId.id">{{cn?.app_id}}</span>
+              <!-- <div *ngFor="let item of uploadImg;index as i"> -->
+              <!-- <img src="" imgPreview id="{{ 'img_' + nowId.innerText}}" [image]="item?._file" [uploadId]="nowId.innerText" style="display: inline-block;" width="48" height="48"/> -->
+              <img [src]="'/api'+cn?.src" appErrorImg="../assets/icon/default-null.png" id="{{ 'img_' + nowId.innerText}}"
+                style="display: inline-block;" width="96" height="96" />
+              <!-- </div> -->
+            </div>
+          </div>
+        </div>
+        <div style="text-align: center;">
+          <p style="margin-bottom: 0;">{{cn?.cn_name}}</p>
+          <p style="margin-bottom: 0;">{{cn?.pkg_name}}</p>
+        </div>
+      </div>
+    </div>
+  
+    <!-- 分页插件 -->
+    <div class="row top_position" *ngIf="inuse_theme_name">
+      <div class="m-auto" *ngIf="nopage">
+        <pagination [pageLinkSize]="5" [rows]="30" [theme]="inuse_theme_name" [currentPage]="pageInfo?.current_page"
+          [totalRecords]="pageInfo?.all_total" (onPageChange)="paginate(inuse_theme_name, $event)">
+        </pagination>
+      </div>
+    </div>
+  
+  
+    <!-- 模态框（Modal） -->
+    <div *ngIf="inuse_theme_name" class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header" style="display: inline-block;">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
+            </button>
+            <p class="modal-title" id="myModalLabel">
+              Tips: 提示
+            </p>
+          </div>
+          <div class="modal-body">
+            {{addThemeNameMsg}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

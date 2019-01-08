@@ -17,7 +17,7 @@ export class GetInfoOfAppService {
   ) { }
 
   /**
-   * 获取所有应用数据信息，未分页
+   * 获取所有应用数据信息，分页
    */
   getInfos_service(page: string) {
     let o_post = {
@@ -80,4 +80,5 @@ export class GetInfoOfAppService {
     }
     return this.http.get('/api/theme', {params: theme});
   }
+  
 }

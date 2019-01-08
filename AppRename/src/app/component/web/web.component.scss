@@ -1,0 +1,30 @@
+.top_position {
+  margin-top: 23px;
+  margin-bottom: 23px;
+}
+.nullblock {
+  border: 3px dotted lightgray;
+  width: 96px;
+  height: 96px;
+}
+.activeImg {
+  border: none;
+}
+
+.sty_input {
+  display: inline-block;
+  vertical-align: middle;
+  width: 180px;
+  font-size: 14px;
+}
+.sty_btn {
+  width: 90px;
+  margin: 0 10px;
+  font-size: 14px;
+}
+.dropdown-item {
+  cursor: pointer;
+}
+.dropdown-menu::-webkit-scrollbar {
+  display: none;
+}

@@ -1,0 +1,33 @@
+.add-icons {
+  background-image: url(../../../assets/operate_icon/add.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  vertical-align: middle;
+  margin: 0 5px;
+}
+.del-icons {
+  background-image: url(../../../assets/operate_icon/del.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  vertical-align: middle;
+  margin: 0 5px;
+}
+.edit-icons {
+  background-image: url(../../../assets/operate_icon/edit.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  vertical-align: middle;
+  margin: 0 5px;
+}
+.table td, .table th {
+  vertical-align: middle;
+}
