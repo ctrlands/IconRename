@@ -54,7 +54,7 @@ router.post('/', (req, res, next) => {
 
         }
       });
-     
+
 
     }
 
@@ -65,6 +65,90 @@ router.post('/', (req, res, next) => {
 router.get('/', (req, res, next) => {
 
 
+});
+
+// 编辑-数据保存
+router.post('/edit', (req, res, next) => {
+  pool.getConnection((err, connection) => {
+    if (err) {
+      res.send(err).end();
+      connection.release();
+    } else {
+      let msg = {
+        code: '',
+        msg: ''
+      };
+      let cn_name = req.body.app_name;
+      let pkg_name = req.body.pkg_name;
+      let company = req.body.company;
+      let app_id = req.body.app_id;
+      let editSql = `UPDATE apps_name SET cn_name='${cn_name}', pkg_name='${pkg_name}', company='${company}' WHERE app_id = '${app_id}'`;
+      connection.query(editSql, '', (errOfEdit, resultOfEdit) => {
+        if (errOfEdit) {
+          res.send(errOfEdit).end();
+          connection.release();
+        } else {
+          console.log(resultOfEdit);
+          msg.code = '200';
+          msg.msg = '修改成功！';
+          res.json([msg]).end();
+          connection.release();
+        }
+      })
+    }
+  });
+});
+
+// 编辑-根据appId获取应用信息
+router.post('/editOfGetInfo', (req, res, next) => {
+  pool.getConnection((err, connection) => {
+    if (err) {
+      res.send(err).end();
+      connection.release();
+    } else {
+      let app_id = req.body.app_id;
+      let editOfGetSql = `SELECT * FROM apps_name WHERE app_id = '${app_id}'`;
+      connection.query(editOfGetSql, '', (errOfGetSql, resultOfGetSql) => {
+        if (errOfGetSql) {
+          res.send(errOfEdit).end();
+          connection.release();
+        } else {
+          res.json(resultOfGetSql).end();
+          connection.release();
+        }
+      })
+    }
+  });
+});
+
+// 添加
+router.post('/add', (req, res, next) => {
+  pool.getConnection((err, connection) => {
+    if (err) {
+      res.send(err).end();
+      connection.release();
+    } else {
+      let msg = {
+        code: '',
+        msg: ''
+      }
+      let app_name = req.body.app_name;
+      let pkg_name = req.body.pkg_name;
+      let company = req.body.company;
+      let addSql = `INSERT INTO apps_name (cn_name, pkg_name, company) VALUES ('${app_name}', '${pkg_name}', '${company}')`;
+      connection.query(addSql, '', (errOfAddSql, resultOfAddSql) => {
+        if (errOfAddSql) {
+          res.send(errOfAddSql).end();
+          connection.release();
+        } else {
+          msg.code = '200';
+          msg.msg = '新建成功！';
+          res.json([msg]).end();
+          connection.release();
+        }
+      })
+    }
+  });
 });
 
 module.exports = router;

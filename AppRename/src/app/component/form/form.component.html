@@ -1,23 +1,23 @@
 <!-- 响应式表单 -->
-<!-- <form #appsForm="ngForm" (ngSubmit)="onSubmit(appsForm.value)">
-  <div ngModelGroup="appsInfos" class="form-group">
-    <label for="app_name">应用名称:</label>
-    <input type="text" required class="form-control" #app_name="ngModel" ngModel name="app_name">
-  </div>
-  <div *ngIf="user.get('app_name').hasError('required') && user.get('app_name').touched" class="error">
-    应用名称必填！
+<div [formGroup]="appInfo">
+  <div class="form-group">
+    <label>
+      应用名称：
+      <!-- FormControl -->
+      <!-- <input type="text" [formControl]="app_name" > -->
+    </label>
+    <input class="form-control" [(value)]="appName" type="text" formControlName="app_name" required>
   </div>
   <div class="form-group">
-    <label for="pwd">应用包名:</label>
-    <input type="password" class="form-control" id="pwd">
+    <label>
+      应用包名：
+    </label>
+    <input class="form-control" [(value)]="pkgName" type="text" formControlName="pkg_name" required>
   </div>
   <div class="form-group">
-    <label for="pwd">应用开发商:</label>
-    <input type="password" class="form-control" id="pwd">
+    <label>
+      应用开发商：
+    </label>
+    <input class="form-control" [(value)]="company" type="text" formControlName="company">
   </div>
-</form> -->
-<label>
-  应用名称：
-  <input type="text" [formControl]="app_name" >
-  Value: {{ app_name.value }}
-</label>
+</div>

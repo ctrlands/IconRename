@@ -1,5 +1,8 @@
 <div class="container-fluid">
-  <div class="col-md-12">
+    {{appName}}
+    {{pkgName}}
+    {{company}}
+  <div class="col-md-12 col-wrapper">
     <table class="table table-striped table-hover">
       <thead class="thead-light">
         <tr>
@@ -16,9 +19,8 @@
           <td>{{app.pkg_name}}</td>
           <td>{{app.company}}</td>
           <td>
-            <i class="add-icons" (click)="add(app.app_id)" data-toggle="modal" data-target="#myModal"></i>
-            <i class="edit-icons" (click)="edit(app.app_id)"></i>
-            <i class="del-icons" (click)="del(app.app_id)"></i>
+            <i class="add-icons" (click)="add()" data-toggle="modal" data-target="#myModal"></i>
+            <i class="edit-icons" (click)="edit(app.app_id)" data-toggle="modal" data-target="#myModal"></i>
           </td>
         </tr>
       </tbody>
@@ -32,7 +34,6 @@
     </pagination>
   </div>
 
-
   <!-- 模态框 -->
   <div class="modal fade" id="myModal">
     <div class="modal-dialog modal-dialog-centered">
@@ -40,19 +41,20 @@
 
         <!-- 模态框头部 -->
         <div class="modal-header">
-          <h4 class="modal-title">数据编辑</h4>
+          <h4 class="modal-title">{{modal_title}}</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
 
         <!-- 模态框主体 -->
         <div class="modal-body">
-            <app-form></app-form>
+            <app-form #form [appName]="appName?appName:''" [pkgName]="pkgName?pkgName:''" [company]="company?company:''"></app-form>
         </div>
 
         <!-- 模态框底部 -->
         <div class="modal-footer">
-          <button type="submit" class="btn btn-primary" data-dismiss="modal">保存</button>
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+          <span class="alert alert-success" *ngIf="msg">{{msg}}请点击'关闭'按钮！</span>
+          <button type="submit" class="btn btn-primary" [disabled]="!form.appInfo.valid" (click)="submit(action,form)">保存</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="close()">关闭</button>
         </div>
 
       </div>
