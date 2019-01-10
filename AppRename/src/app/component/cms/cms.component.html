@@ -47,12 +47,12 @@
 
         <!-- 模态框主体 -->
         <div class="modal-body">
-            <app-form #form [appName]="appName?appName:''" [pkgName]="pkgName?pkgName:''" [company]="company?company:''"></app-form>
+            <app-form #form [appName]="appName" [pkgName]="pkgName" [company]="company"></app-form>
         </div>
 
         <!-- 模态框底部 -->
         <div class="modal-footer">
-          <span class="alert alert-success" *ngIf="msg">{{msg}}请点击'关闭'按钮！</span>
+          <span class="alert alert-success" *ngIf="msg">{{msg}}</span>
           <button type="submit" class="btn btn-primary" [disabled]="!form.appInfo.valid" (click)="submit(action,form)">保存</button>
           <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="close()">关闭</button>
         </div>
@@ -62,3 +62,4 @@
   </div>
 
 </div>
+

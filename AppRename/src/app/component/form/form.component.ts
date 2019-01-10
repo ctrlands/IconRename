@@ -23,6 +23,9 @@ export class FormComponent implements OnInit {
   }
 
   ngOnChanges() {
+    // this.app_name = this.appName;
+    // this.pkg_name = this.pkgName;
+    // this.app_company = this.company;
     this.initDefaultValue();
   }
 
@@ -30,6 +33,9 @@ export class FormComponent implements OnInit {
     this.appName = this.appName ? this.appName : '';
     this.pkgName = this.pkgName ? this.pkgName : '';
     this.company = this.company ? this.company : '';
+    // this.app_name = this.appName;
+    // this.pkg_name = this.pkgName;
+    // this.app_company = this.company;
   }
 
   // @Output() onSubmit = new EventEmitter();

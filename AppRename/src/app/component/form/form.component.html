@@ -6,18 +6,18 @@
       <!-- FormControl -->
       <!-- <input type="text" [formControl]="app_name" > -->
     </label>
-    <input class="form-control" [(value)]="appName" type="text" formControlName="app_name" required>
+    <input class="form-control" [(ngModel)]="appName" name="appName" type="text" formControlName="app_name" required>
   </div>
   <div class="form-group">
     <label>
       应用包名：
     </label>
-    <input class="form-control" [(value)]="pkgName" type="text" formControlName="pkg_name" required>
+    <input class="form-control" [(ngModel)]="pkgName" name="pkgName" type="text" formControlName="pkg_name" required>
   </div>
   <div class="form-group">
     <label>
       应用开发商：
     </label>
-    <input class="form-control" [(value)]="company" type="text" formControlName="company">
+    <input class="form-control" [(ngModel)]="company" name="company" type="text" formControlName="company">
   </div>
 </div>

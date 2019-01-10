@@ -91,7 +91,9 @@ export class CmsComponent implements OnInit {
     this.getInfoOfAppService.postInfos_add_service(data)
       .subscribe(res => {
         if (res[0].code == '200') {
-          this.msg = res[0].msg
+          this.msg = res[0].msg;
+        } else {
+          this.msg = res[0].msg;
         }
       })
   }
@@ -145,9 +147,9 @@ export class CmsComponent implements OnInit {
 
   // 关闭按钮-点击事件
   public close() {
-    this.appName = '';
-    this.pkgName = '';
-    this.company = '';
+    this.appName = ' ';
+    this.pkgName = ' ';
+    this.company = ' ';
     this.msg = '';
   }
 

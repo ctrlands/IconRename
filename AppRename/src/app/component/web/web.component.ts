@@ -75,6 +75,14 @@ export class WebComponent implements OnInit {
     this.getThemeList();
   }
 
+  public isvalid (): boolean {
+    if (this.search_keyword && this.inuse_theme_name) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
 
   /**
    * 获取所有应用信息
@@ -117,15 +125,17 @@ export class WebComponent implements OnInit {
   public setThemeName() {
     this.getInfoOfAppService.postSetThemeName(this.theme_name)
       .subscribe(res => {
-
-        this.addThemeNameMsg = '';
-        this.addThemeNameMsg = res[0].msg;
+        
         if (res[0].code == '200') {
+          this.addThemeNameMsg = '';
+          this.addThemeNameMsg = res[0].msg;
           this.inuse_theme_name = res[3].theme_name;
           this.anyList = res[1];
           this.pageInfo = res[2];
           this.getThemeList();
           this.theme_name = '';
+        } else {
+          this.addThemeNameMsg = res[0].msg;
         }
       })
   }
@@ -211,6 +221,7 @@ export class WebComponent implements OnInit {
    * @param event: 文件的相关信息
    * @param id: 当前Icon的Id
    */
+  public uploadstatus: boolean;
   public fileDropOver(id: string, event) {
 
     /* FileUploader有个数组类型的属性queue，里面是所有拖拽的和选择的文件，只要操作这个属性便可以进行文件上传。 */
@@ -221,7 +232,8 @@ export class WebComponent implements OnInit {
       // this.uploader.setOptions({ additionalParameter: { 'nowid': '10000' } });
 
       var ids = '#img_' + id;
-      console.log(this.el.nativeElement.querySelector(ids));
+      var idOfDiv = '#id' + id;
+      console.log(this.el.nativeElement.querySelector(idOfDiv));
       // this.uploader.queue[0].url = `http://localhost:3000/upload?id=${id}`;
       this.uploader.queue[0].onSuccess = (response, status, headers) => {
 
@@ -229,14 +241,18 @@ export class WebComponent implements OnInit {
         if (status == 200) {
           // 上传文件后获取服务器返回的数据
           let tempRes = JSON.parse(response);
-          console.log(tempRes);
+          this.uploadstatus = true;
           /* this.uploadImg = this.uploader.queue[0];
           console.log(this.uploadImg); */
           // that.mod_new_image = tempRes.data; // 申明一个变量接住返回的数据，可以进行赋值
           // 为什么要在往外面申明一个that代替this, 现在是只在uploader里面, this就只能指uploader
           that.uploader.clearQueue(); // 上传成功之后清除上传的文件流保证下一个文件流是新的
           // this.el.nativeElement.querySelector(ids).src = '../assets/icon/'+tempRes.res_name;
-          this.el.nativeElement.querySelector(ids).src = '/api/' + tempRes.res_src;
+          // this.el.nativeElement.querySelector(ids).src = '/api/' + tempRes.res_src;
+          this.renderer2.setAttribute(this.el.nativeElement.querySelector(ids),'src','/api/' + tempRes.res_src);
+          // this.el.nativeElement.querySelector(idOfDiv).style.backgroundColor = '#f03326';
+          this.renderer2.addClass(this.el.nativeElement.querySelector(idOfDiv),'activeImg');
+
         } else {
           // 上传文件后获取服务器返回的数据错误
           console.log('错误！')

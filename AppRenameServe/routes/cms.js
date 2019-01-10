@@ -135,16 +135,27 @@ router.post('/add', (req, res, next) => {
       let app_name = req.body.app_name;
       let pkg_name = req.body.pkg_name;
       let company = req.body.company;
+      let isAppSql = `SELECT COUNT(pkg_name) AS sumOfApp FROM apps_name  WHERE pkg_name = '${pkg_name}'`;
       let addSql = `INSERT INTO apps_name (cn_name, pkg_name, company) VALUES ('${app_name}', '${pkg_name}', '${company}')`;
-      connection.query(addSql, '', (errOfAddSql, resultOfAddSql) => {
-        if (errOfAddSql) {
-          res.send(errOfAddSql).end();
-          connection.release();
-        } else {
-          msg.code = '200';
-          msg.msg = '新建成功！';
+
+      connection.query(isAppSql, '', (errOfIsAppSql, resultOfIsAppSql) => {
+        if (resultOfIsAppSql[0].sumOfApp >= 1) {
+          msg.code = '-200';
+          msg.msg = req.body.pkg_name + '该应用信息已存在！';
           res.json([msg]).end();
           connection.release();
+        } else {
+          connection.query(addSql, '', (errOfAddSql, resultOfAddSql) => {
+            if (errOfAddSql) {
+              res.send(errOfAddSql).end();
+              connection.release();
+            } else {
+              msg.code = '200';
+              msg.msg = '新建成功！';
+              res.json([msg]).end();
+              connection.release();
+            }
+          })
         }
       })
     }
