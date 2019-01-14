@@ -35,7 +35,7 @@ router.post('/', (req, res, next) => {
             next_page = all_page_total;
           }
 
-          var pageQuerySql = 'SELECT * FROM apps_name LIMIT ' + per_page_total + ' OFFSET ' + per_page_total * current_page;
+          var pageQuerySql = 'SELECT * FROM apps_name ORDER BY company DESC' + ' LIMIT ' + per_page_total + ' OFFSET ' + per_page_total * current_page;
           connection.query(pageQuerySql, '', function (err, datas) {
             if (err) {
               res.send(err).end(); // 数据库连接异常
@@ -135,8 +135,10 @@ router.post('/add', (req, res, next) => {
       let app_name = req.body.app_name;
       let pkg_name = req.body.pkg_name;
       let company = req.body.company;
+      let alpha_index = req.body.alphaIndex;
+      let category = req.body.category;
       let isAppSql = `SELECT COUNT(pkg_name) AS sumOfApp FROM apps_name  WHERE pkg_name = '${pkg_name}'`;
-      let addSql = `INSERT INTO apps_name (cn_name, pkg_name, company) VALUES ('${app_name}', '${pkg_name}', '${company}')`;
+      let addSql = `INSERT INTO apps_name (cn_name, pkg_name, company, alpha_index, category) VALUES ('${app_name}', '${pkg_name}', '${company}', '${alpha_index}', '${category}')`;
 
       connection.query(isAppSql, '', (errOfIsAppSql, resultOfIsAppSql) => {
         if (resultOfIsAppSql[0].sumOfApp >= 1) {

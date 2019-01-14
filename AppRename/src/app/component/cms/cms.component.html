@@ -9,6 +9,8 @@
           <th>应用名称</th>
           <th>应用包名</th>
           <th>应用开发商</th>
+          <!-- <th>应用名称索引</th>
+          <th>应用类别</th> -->
           <th>操作</th>
         </tr>
       </thead>
@@ -18,6 +20,8 @@
           <td>{{app.cn_name}}</td>
           <td>{{app.pkg_name}}</td>
           <td>{{app.company}}</td>
+          <!-- <td>{{app.alpha_index}}</td>
+          <td>{{app.category ? app.category : 'null'}}</td> -->
           <td>
             <i class="add-icons" (click)="add()" data-toggle="modal" data-target="#myModal"></i>
             <i class="edit-icons" (click)="edit(app.app_id)" data-toggle="modal" data-target="#myModal"></i>
@@ -47,7 +51,7 @@
 
         <!-- 模态框主体 -->
         <div class="modal-body">
-            <app-form #form [appName]="appName" [pkgName]="pkgName" [company]="company"></app-form>
+            <app-form #form [appName]="appName" [pkgName]="pkgName" [company]="company" [alphaIndex]="alphaIndex" [category]="category"></app-form>
         </div>
 
         <!-- 模态框底部 -->

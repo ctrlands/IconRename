@@ -22,6 +22,8 @@ export class CmsComponent implements OnInit {
   public appName: string; // 当前应用图标名称
   public pkgName: string; // 当前应用包名
   public company: string; // 当前应用开发商
+  public alphaIndex: string; // 应用名称索引
+  public category: string; // 应用类别
 
   public modal_title: string; // 模态框标题
 
@@ -81,6 +83,8 @@ export class CmsComponent implements OnInit {
         this.appName = res[0].cn_name;
         this.pkgName = res[0].pkg_name;
         this.company = res[0].company;
+        this.alphaIndex = res[0].alpha_index;
+        this.category = res[0].category;
       })
   }
 
@@ -114,6 +118,8 @@ export class CmsComponent implements OnInit {
     this.appName = '';
     this.pkgName = '';
     this.company = '';
+    this.alphaIndex = '';
+    this.category = '';
   }
 
   // 编辑按钮-点击事件
@@ -122,6 +128,8 @@ export class CmsComponent implements OnInit {
     this.appName = '';
     this.pkgName = '';
     this.company = '';
+    this.alphaIndex = '';
+    this.category = '';
     this.appId = appId;
     this.valid = true;
     this.action = 'edit';
@@ -150,6 +158,8 @@ export class CmsComponent implements OnInit {
     this.appName = ' ';
     this.pkgName = ' ';
     this.company = ' ';
+    this.alphaIndex = ' ';
+    this.category = ' ';
     this.msg = '';
   }
 

@@ -15,6 +15,9 @@ export class FormComponent implements OnInit {
   @Input() appName: string; // 应用名称
   @Input() pkgName: string; // 应用包名
   @Input() company: string; // 应用开发商
+  @Input() alphaIndex: string; // 应用名称索引
+  @Input() category: string; // 应用类别
+
 
   constructor() { }
 
@@ -33,6 +36,8 @@ export class FormComponent implements OnInit {
     this.appName = this.appName ? this.appName : '';
     this.pkgName = this.pkgName ? this.pkgName : '';
     this.company = this.company ? this.company : '';
+    this.alphaIndex = this.alphaIndex ? this.alphaIndex : '';
+    this.category = this.category ? this.category : '';
     // this.app_name = this.appName;
     // this.pkg_name = this.pkgName;
     // this.app_company = this.company;
@@ -54,6 +59,8 @@ export class FormComponent implements OnInit {
     app_name: new FormControl('', Validators.required),
     pkg_name: new FormControl('', Validators.required),
     company: new FormControl(''),
+    alphaIndex: new FormControl(''),
+    category: new FormControl('')
     // childGroup = new FormGroup({})
   })
 
