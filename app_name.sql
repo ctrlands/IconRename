@@ -11,7 +11,7 @@
  Target Server Version : 80011
  File Encoding         : 65001
 
- Date: 10/01/2019 15:59:19
+ Date: 14/01/2019 09:34:15
 */
 
 SET NAMES utf8mb4;
@@ -23,14 +23,14 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `apps_name`;
 CREATE TABLE `apps_name`  (
   `app_id` int(4) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `cn_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '应用中文名',
-  `pkg_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '应用包名',
-  `alpha_index` varchar(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '字母索引',
-  `company` varchar(24) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '应用开发商',
-  `category` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '应用类型',
-  `src` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `cn_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '应用中文名',
+  `pkg_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '应用包名',
+  `alpha_index` varchar(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '字母索引',
+  `company` varchar(24) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '应用开发商',
+  `category` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '应用类型',
+  `src` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   PRIMARY KEY (`app_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 10057 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 10073 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of apps_name
@@ -76,6 +76,13 @@ INSERT INTO `apps_name` VALUES (10037, '酷安', 'com.coolapk.market', 'k', '', 
 INSERT INTO `apps_name` VALUES (10038, 'RE管理器:Root Explorer', 'com.speedsoftware.rootexplorer', 'r', '', NULL, NULL);
 INSERT INTO `apps_name` VALUES (10040, 'WiFi万能钥匙', 'com.snda.wifilocating', 'w', '', NULL, NULL);
 INSERT INTO `apps_name` VALUES (10041, '支付宝', 'com.eg.android.AlipayGphone', 'z', '阿里', NULL, NULL);
+INSERT INTO `apps_name` VALUES (10065, '招商银行', 'cmb.pb', 'z', NULL, NULL, NULL);
+INSERT INTO `apps_name` VALUES (10066, '优酷', 'com.youku.phone', 'y', NULL, NULL, NULL);
+INSERT INTO `apps_name` VALUES (10067, '小米移动', 'com.xiaomi.mimobile', 'x', NULL, NULL, NULL);
+INSERT INTO `apps_name` VALUES (10068, 'vlc播放器', 'org.videolan.vlc', 'v', NULL, NULL, NULL);
+INSERT INTO `apps_name` VALUES (10069, '小米wifi', 'com.xiaomi.router', 'x', '小米', NULL, NULL);
+INSERT INTO `apps_name` VALUES (10070, '小米运动', 'com.xiaomi.hm.health', 'x', '小米', NULL, NULL);
+INSERT INTO `apps_name` VALUES (10071, '小爱音响', 'com.xiaomi.mico', 'x', '小米', NULL, NULL);
 
 -- ----------------------------
 -- Table structure for src_info
@@ -85,15 +92,9 @@ CREATE TABLE `src_info`  (
   `src_id` int(5) UNSIGNED NOT NULL AUTO_INCREMENT,
   `app_id` int(5) DEFAULT NULL COMMENT '关联每个应用',
   `theme_id` int(5) DEFAULT NULL COMMENT '关联theme_name表',
-  `src_resource` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '图片地址',
+  `src_resource` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '图片地址',
   PRIMARY KEY (`src_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 40 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of src_info
--- ----------------------------
-INSERT INTO `src_info` VALUES (57, 10008, 10000, '/default/default/com.tencent.mtt.png');
-INSERT INTO `src_info` VALUES (58, 10007, 10053, '/default/请问权威/com.tencent.mm.png');
+) ENGINE = InnoDB AUTO_INCREMENT = 59 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for theme_name
@@ -103,6 +104,6 @@ CREATE TABLE `theme_name`  (
   `theme_id` int(5) NOT NULL AUTO_INCREMENT,
   `theme_name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   PRIMARY KEY (`theme_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 10049 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 10056 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 SET FOREIGN_KEY_CHECKS = 1;
