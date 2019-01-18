@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, Renderer2, ViewChild } from '@angular/core';
 
 import { CmsService } from '../../service/cms.service';
 
 import { AppInfo } from '../../class/app-info';
 import { PageInfo } from '../../class/page-info';
+
+
 
 @Component({
   selector: 'app-cms',
@@ -11,6 +13,7 @@ import { PageInfo } from '../../class/page-info';
   styleUrls: ['./cms.component.scss']
 })
 export class CmsComponent implements OnInit {
+
 
   title = '后台管理界面';
   public anyList: AppInfo[];
@@ -24,6 +27,10 @@ export class CmsComponent implements OnInit {
   public company: string; // 当前应用开发商
   public alphaIndex: string; // 应用名称索引
   public category: string; // 应用类别
+  public cmsSrc: string; // 应用图标
+
+  public files: any;
+  public isClear_par: boolean;
 
   public modal_title: string; // 模态框标题
 
@@ -32,13 +39,22 @@ export class CmsComponent implements OnInit {
 
   public msg: string; // 返回状态数据提示信息
 
+
+  public upsrc:string; // 文件上传路径
+
+
+  public uploader: any;
+
   constructor(
+    private el: ElementRef,
+    private renderer2: Renderer2,
     private getInfoOfAppService: CmsService
   ) { }
 
   ngOnInit() {
     this.getAppsOfName();
   }
+
   /**
    * 获取所有应用信息-first
    */
@@ -50,6 +66,7 @@ export class CmsComponent implements OnInit {
         this.anyList = res[0];
       })
   }
+
 
   /**
    * 获取所有应用信息-pagination
@@ -69,7 +86,7 @@ export class CmsComponent implements OnInit {
     this.getInfoOfAppService.postInfos_edit_service(editdata)
       .subscribe(res => {
         if (res[0].code == '200') {
-          this.msg = res[0].msg
+          this.msg = res[0].msg;
         }
       })
   }
@@ -85,6 +102,7 @@ export class CmsComponent implements OnInit {
         this.company = res[0].company;
         this.alphaIndex = res[0].alpha_index;
         this.category = res[0].category;
+        this.cmsSrc = res[0].cms_src;
       })
   }
 
@@ -96,6 +114,16 @@ export class CmsComponent implements OnInit {
       .subscribe(res => {
         if (res[0].code == '200') {
           this.msg = res[0].msg;
+          /* if (this.uploader.queue.length != 0) {
+            this.uploader.clearQueue();
+          } */
+
+          this.appName = '';
+          this.pkgName = '';
+          this.company = '';
+          this.alphaIndex = '';
+          this.category = '';
+
         } else {
           this.msg = res[0].msg;
         }
@@ -114,22 +142,39 @@ export class CmsComponent implements OnInit {
   // 添加
   public add() {
     this.modal_title = '数据添加';
+
     this.action = 'add';
     this.appName = '';
     this.pkgName = '';
     this.company = '';
     this.alphaIndex = '';
     this.category = '';
+    this.cmsSrc = '';
+
+    this.upsrc = 'http://localhost:3000/cms/add';
+    if (this.uploader && this.uploader.queue && this.uploader.queue.length != 0) {
+      /* this.uploader.options.url = "http://localhost:3000/cms/add"; */
+      this.uploader.clearQueue();
+    }
+
+    this.isClear_par = undefined;
+
   }
 
   // 编辑按钮-点击事件
   public edit(appId) {
     this.modal_title = '数据编辑';
+    /* if (this.uploader) {
+      this.uploader.options.url = "http://localhost:3000/cms/edit";
+    } */
+    this.upsrc = 'http://localhost:3000/cms/edit';
+
     this.appName = '';
     this.pkgName = '';
     this.company = '';
     this.alphaIndex = '';
     this.category = '';
+    this.cmsSrc = '';
     this.appId = appId;
     this.valid = true;
     this.action = 'edit';
@@ -142,10 +187,20 @@ export class CmsComponent implements OnInit {
     action = this.action;
     switch (action) {
       case 'add':
+        if (this.uploader) {
+          this.uploader.options.url = "http://localhost:3000/cms/add";
+        }
+        if (this.uploader && this.uploader.queue.length >= 1) {
+          this.uploader.queue[this.uploader.queue.length - 1].upload();
+        }
         let add = data.appInfo.value;
         this.addApps(add);
         break;
       case 'edit':
+        if (this.uploader && this.uploader.queue.length >= 1) {
+          this.uploader.options.url = "http://localhost:3000/cms/edit";
+          this.uploader.queue[this.uploader.queue.length - 1].upload();
+        }
         let edit = data.appInfo.value;
         edit.app_id = this.appId;
         this.editAppsPost(edit);
@@ -153,6 +208,7 @@ export class CmsComponent implements OnInit {
     }
   }
 
+  public isfile: boolean = true;
   // 关闭按钮-点击事件
   public close() {
     this.appName = ' ';
@@ -160,7 +216,20 @@ export class CmsComponent implements OnInit {
     this.company = ' ';
     this.alphaIndex = ' ';
     this.category = ' ';
+    this.cmsSrc = '../../../assets/icon/default-cms-null.png';
     this.msg = '';
+    this.isfile = true;
+    this.isClear_par = true;
+    if (this.uploader && this.uploader.queue.length != 0) {
+      this.uploader.clearQueue();
+    }
+
+  }
+
+  public getFileInfo(event) {
+    this.isfile = false;
+    this.files = event.event;
+    this.uploader = event.uploader;
   }
 
 }

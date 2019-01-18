@@ -1,10 +1,14 @@
 let express = require('express');
 let router = express.Router();
 
+// 导入文件上传模块
+let fs = require('fs');
+let multer = require('multer');
+
 // 导入MySQL模块
 let mysql = require('mysql');
 let dbConfig = require('../db/config');
-let simpleSql = require('../db/simpleSql');
+
 // 创建一个msql连接池
 let pool = mysql.createPool(dbConfig.mysql);
 
@@ -62,13 +66,51 @@ router.post('/', (req, res, next) => {
 
 });
 
-router.get('/', (req, res, next) => {
+router.get('/', (req, res, next) => {});
 
 
+// 创建文件夹
+let createFolder = function (folder) {
+  try {
+    // 测试path指定的文件或目录的用户权限，我们用来检测文件是否存在
+    // 如果文件路径不存在将会抛出错误'no such file or directory'
+    fs.accessSync(folder);
+  } catch (e) {
+    // 文件夹不存在，以同步的方式创建目录
+    fs.mkdirSync(folder);
+  }
+}
+
+// 使用硬盘存储模式设置存放接收到的文件的路径及文件名
+let storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    // 接受到文件后输出的保存路径(若不存在则需要创建)
+    let uploadFolder = 'D:/upload/1';
+    createFolder(uploadFolder);
+    cb(null, uploadFolder);
+  },
+  filename: function (req, file, cb) {
+    if (req.body.pkgName != '' && req.body.pkgName) {
+      cb(null, req.body.pkgName + '.png');
+      /* getAppNameById(req.body.nowid, function (result) {
+      }) */
+    } else {
+      cb(null, '12138' + '.png');
+    }
+  }
+})
+
+
+// 创建multer对象
+let upload = multer({
+  storage: storage
 });
 
+
+
+
 // 编辑-数据保存
-router.post('/edit', (req, res, next) => {
+router.post('/edit', upload.single('uploadedfile'), (req, res, next) => {
   pool.getConnection((err, connection) => {
     if (err) {
       res.send(err).end();
@@ -88,7 +130,6 @@ router.post('/edit', (req, res, next) => {
           res.send(errOfEdit).end();
           connection.release();
         } else {
-          console.log(resultOfEdit);
           msg.code = '200';
           msg.msg = '修改成功！';
           res.json([msg]).end();
@@ -122,7 +163,8 @@ router.post('/editOfGetInfo', (req, res, next) => {
 });
 
 // 添加
-router.post('/add', (req, res, next) => {
+
+router.post('/add', upload.single('uploadedfile'), (req, res, next) => {
   pool.getConnection((err, connection) => {
     if (err) {
       res.send(err).end();
@@ -133,33 +175,35 @@ router.post('/add', (req, res, next) => {
         msg: ''
       }
       let app_name = req.body.app_name;
-      let pkg_name = req.body.pkg_name;
-      let company = req.body.company;
-      let alpha_index = req.body.alphaIndex;
-      let category = req.body.category;
-      let isAppSql = `SELECT COUNT(pkg_name) AS sumOfApp FROM apps_name  WHERE pkg_name = '${pkg_name}'`;
-      let addSql = `INSERT INTO apps_name (cn_name, pkg_name, company, alpha_index, category) VALUES ('${app_name}', '${pkg_name}', '${company}', '${alpha_index}', '${category}')`;
+        let pkg_name = req.body.pkg_name;
+        let company = req.body.company;
+        let alpha_index = req.body.alphaIndex;
+        let category = req.body.category;
+        let isAppSql = `SELECT COUNT(pkg_name) AS sumOfApp FROM apps_name  WHERE pkg_name = '${pkg_name}'`;
+        let addSql = `INSERT INTO apps_name (cn_name, pkg_name, company, alpha_index, category) VALUES ('${app_name}', '${pkg_name}', '${company}', '${alpha_index}', '${category}')`;
 
-      connection.query(isAppSql, '', (errOfIsAppSql, resultOfIsAppSql) => {
-        if (resultOfIsAppSql[0].sumOfApp >= 1) {
-          msg.code = '-200';
-          msg.msg = req.body.pkg_name + '该应用信息已存在！';
-          res.json([msg]).end();
-          connection.release();
-        } else {
-          connection.query(addSql, '', (errOfAddSql, resultOfAddSql) => {
-            if (errOfAddSql) {
-              res.send(errOfAddSql).end();
-              connection.release();
-            } else {
-              msg.code = '200';
-              msg.msg = '新建成功！';
-              res.json([msg]).end();
-              connection.release();
-            }
-          })
-        }
-      })
+        
+        connection.query(isAppSql, '', (errOfIsAppSql, resultOfIsAppSql) => {
+          if (resultOfIsAppSql[0].sumOfApp >= 1) {
+            msg.code = '-200';
+            msg.msg = req.body.pkg_name + '该应用信息已存在！';
+            res.json([msg]).end();
+            connection.release();
+          } else {
+            connection.query(addSql, '', (errOfAddSql, resultOfAddSql) => {
+              if (errOfAddSql) {
+                res.send(errOfAddSql).end();
+                connection.release();
+              } else {
+                msg.code = '200';
+                msg.msg = '新建成功！';
+                res.json([msg]).end();
+                connection.release();
+              }
+            })
+          }
+        })
+
     }
   });
 });
