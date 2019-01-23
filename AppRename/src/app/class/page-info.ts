@@ -5,4 +5,6 @@ export interface PageInfo {
   all_page_total: any;
   first_page: any;
   all_total: any;
+  cms_page_type: any;
+  page_type: any;
 }

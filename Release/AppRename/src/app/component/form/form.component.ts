@@ -34,7 +34,7 @@ export class FormComponent {
   
 
   public uploader: FileUploader = new FileUploader({
-    url: 'http://localhost:3000/cms/add',
+    url: 'http://localhost:3000/cms/uploadfile',
     method: 'post',
     itemAlias: 'uploadedfile',
     autoUpload: false,
@@ -66,15 +66,13 @@ export class FormComponent {
   }
 
   initDefaultValue() {
-    this.uploadSrc = this.uploadSrc ? this.uploadSrc : 'http://localhost:3000/cms/add';
-
-
+   
     this.appName = this.appName ? this.appName : '';
     this.pkgName = this.pkgName ? this.pkgName : '';
     this.company = this.company ? this.company : '';
     this.alphaIndex = this.alphaIndex ? this.alphaIndex : '';
     this.category = this.category ? this.category : '';
-    this.cmsSrc = this.cmsSrc ? this.cmsSrc : 'default/DEFAULTICONOFALL/default-cms-null.png';
+    this.cmsSrc = this.cmsSrc ? this.cmsSrc : 'DEFAULTICONOFALL/default-cms-null.png';
     this.isClear_child = this.isClear_child ? this.isClear_child : false;
 
 

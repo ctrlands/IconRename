@@ -14,7 +14,7 @@ export class DefaultImgDirective {
     if (this.errorImageSrc) {
       event.src = this.errorImageSrc;
     } else {
-      event.src = '../assets/icon/default-null.png';
+      event.src = 'default/DEFAULTICONOFALL/default-null.png';
     }
   }
 }

@@ -2,12 +2,15 @@
 <form [formGroup]="appInfo">
   <div class="form-group" style="text-align: center;">
     <div class="" style="display: inline-block;margin: 0 23px;">
-      <img src="api/default/{{cmsSrc}}" width="96" height="96" style="vertical-align: baseline; border-radius: 23px;">
+      <img src="{{cmsSrc}}" width="96" height="96" style="vertical-align: baseline; border-radius: 23px;">
     </div>
+
+    <h4 class="arrow" [hidden]="!(pkgName && appName)"><----</h4>
 
     <div style="margin: 0 23px;" [hidden]="!(pkgName && appName)" class="nullblock" [ngClass]="{'activeImg': imgsrcTemp[0]}" ng2FileDrop (onFileDrop)="fileDropOver($event)" [uploader]="uploader">
       <!-- imgPreview [image]="imgsrcTemp[0]" [isClear_direct]="isClear_child" -->
-      <img #previewImg name="cmsSrc" id="previewImg" src="../../../assets/icon/default-null.png" style="display: inline-block; vertical-align: baseline;" width="96" height="96" />
+      <img #previewImg name="cmsSrc" class="nullblocks" id="previewImg" src="../assets/icon/default-null.png" style="display: inline-block; vertical-align: baseline;" width="96" height="96" />
+     <!--  {{previewImg.src}} -->
     </div>
     
   </div>

@@ -93,6 +93,7 @@ app.use('/null', nullRouter);
 
 app.use('/cms', cmsRouter);
 
+
 app.use((req, res, next) => {
   if (req.cookies.isTheme) {
     res.locals.isTheme = req.cookies.isTheme.name;

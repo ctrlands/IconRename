@@ -80,8 +80,7 @@ function getThemeByName(themeName, _callback) {
     pool.getConnection(function (err, connection) {
       connection.query(simpleSql.getThemeNameByName, themeName, function (err, result) {
         if (err) {
-          console.log('查询sql语法错误！');
-          return err;
+          res.send(err).end();
         } else {
           uploadFolder = 'D:/upload/' + result[0].theme_name;
           createFolder(uploadFolder);

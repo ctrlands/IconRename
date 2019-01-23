@@ -14,7 +14,7 @@ import { FileUploader, FileItem } from 'ng2-file-upload';
   templateUrl: './form.component.html',
   styleUrls: ['./form.component.scss']
 })
-export class FormComponent implements OnInit {
+export class FormComponent {
   @ViewChild('previewImg') previewImg: ElementRef;
   @Input() appName: string; // 应用名称
   @Input() pkgName: string; // 应用包名
@@ -34,7 +34,7 @@ export class FormComponent implements OnInit {
   
 
   public uploader: FileUploader = new FileUploader({
-    url: 'http://localhost:3000/cms/add',
+    url: 'http://localhost:3000/cms/uploadfile',
     method: 'post',
     itemAlias: 'uploadedfile',
     autoUpload: false,
@@ -66,20 +66,18 @@ export class FormComponent implements OnInit {
   }
 
   initDefaultValue() {
-    this.uploadSrc = this.uploadSrc ? this.uploadSrc : 'http://localhost:3000/cms/add';
-
-
+   
     this.appName = this.appName ? this.appName : '';
     this.pkgName = this.pkgName ? this.pkgName : '';
     this.company = this.company ? this.company : '';
     this.alphaIndex = this.alphaIndex ? this.alphaIndex : '';
     this.category = this.category ? this.category : '';
-    this.cmsSrc = this.cmsSrc ? this.cmsSrc : 'DEFAULTICONOFALL/default-cms-null.png';
+    this.cmsSrc = this.cmsSrc ? this.cmsSrc : '../assets/icon/default-cms-null.png';
     this.isClear_child = this.isClear_child ? this.isClear_child : false;
 
 
     if (this.isClear_child == true) {
-      this.previewImg.nativeElement.src = '../../../assets/icon/default-null.png';
+      this.previewImg.nativeElement.src = '../assets/icon/default-null.png';
       this.previewImg.nativeElement.style.border = '3px dotted lightgrey';
 
     }

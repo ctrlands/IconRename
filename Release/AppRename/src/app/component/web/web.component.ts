@@ -17,6 +17,7 @@ import { PageInfo } from '../../class/page-info';
 
 export class WebComponent implements OnInit {
   @Input() nowId: number;
+  title: string = 'Icon-Rename-client';
 
 
 
@@ -38,7 +39,7 @@ export class WebComponent implements OnInit {
 
   public nopage: number = 1; // 是否显示分页插件
 
-  title = 'AppRename';
+  title = 'Icon-Rename';
   public anyList: AppInfo[];
   public pageInfo: PageInfo;
   public operateId = {
@@ -233,7 +234,7 @@ export class WebComponent implements OnInit {
 
       var ids = '#img_' + id;
       var idOfDiv = '#id' + id;
-      console.log(this.el.nativeElement.querySelector(idOfDiv));
+      //console.log(this.el.nativeElement.querySelector(idOfDiv));
       // this.uploader.queue[0].url = `http://localhost:3000/upload?id=${id}`;
       this.uploader.queue[0].onSuccess = (response, status, headers) => {
 
@@ -249,7 +250,7 @@ export class WebComponent implements OnInit {
           that.uploader.clearQueue(); // 上传成功之后清除上传的文件流保证下一个文件流是新的
           // this.el.nativeElement.querySelector(ids).src = '../assets/icon/'+tempRes.res_name;
           // this.el.nativeElement.querySelector(ids).src = '/api/' + tempRes.res_src;
-          this.renderer2.setAttribute(this.el.nativeElement.querySelector(ids),'src', 'default' + tempRes.res_src);
+          this.renderer2.setAttribute(this.el.nativeElement.querySelector(ids),'src','/api/' + tempRes.res_src);
           // this.el.nativeElement.querySelector(idOfDiv).style.backgroundColor = '#f03326';
           this.renderer2.addClass(this.el.nativeElement.querySelector(idOfDiv),'activeImg');
 

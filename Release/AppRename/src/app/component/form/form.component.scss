@@ -1,9 +1,24 @@
 .nullblock {
+  // border: 3px dotted lightgray;
+  width: 96px;
+  height: 96px;
+  display: inline-block;
+}
+
+.activeImg {
+  border: unset;
+}
+
+.nullblocks {
   border: 3px dotted lightgray;
   width: 96px;
   height: 96px;
   display: inline-block;
 }
-.activeImg {
-  border: unset;
+
+.arrow {
+  display: inline-block;
+  vertical-align: top;
+  padding: 34px 0;
+  color: lightgray;
 }

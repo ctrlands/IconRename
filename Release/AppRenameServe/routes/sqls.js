@@ -22,9 +22,7 @@ let responseJSON = function (res, ret) {
 
 /* 分页 GET. */
 router.get('/', function (req, res, next) {
-  console.log(req.cookies.themeName);
   if (req.cookies.themeName) {
-    console.log(req.cookies.themeName);
     // 从连接池获取连接
     pool.getConnection(function (err, connection) {
       /* 分页查询 */

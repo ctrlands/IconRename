@@ -17,6 +17,7 @@ import { PageInfo } from '../../class/page-info';
 
 export class WebComponent implements OnInit {
   @Input() nowId: number;
+  title: string = 'Icon-Rename-client';
 
 
 
@@ -38,7 +39,6 @@ export class WebComponent implements OnInit {
 
   public nopage: number = 1; // 是否显示分页插件
 
-  title = 'AppRename';
   public anyList: AppInfo[];
   public pageInfo: PageInfo;
   public operateId = {
@@ -233,7 +233,7 @@ export class WebComponent implements OnInit {
 
       var ids = '#img_' + id;
       var idOfDiv = '#id' + id;
-      console.log(this.el.nativeElement.querySelector(idOfDiv));
+      //console.log(this.el.nativeElement.querySelector(idOfDiv));
       // this.uploader.queue[0].url = `http://localhost:3000/upload?id=${id}`;
       this.uploader.queue[0].onSuccess = (response, status, headers) => {
 

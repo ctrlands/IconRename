@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
 import { Observable, throwError } from 'rxjs';
-import { catchError, retry } from 'rxjs/operators';
+
 
 @Injectable()
 export class GetInfoOfAppService {
@@ -37,7 +37,7 @@ export class GetInfoOfAppService {
    * 分页应用数据信息获取
    * @param reqBody : 当前页码
    */
-  postInfos_service(theme,reqBody:any) {
+  postInfos_service(theme: any, reqBody: any) {
     /* let o_post = new HttpParams().set('page',reqBody); // page=1
     return this.http.post('/api/sql', '', {params: o_post});  // 后台可通过req.query.page取得page的值*/
     let o_post = {

@@ -58,15 +58,15 @@
             <span hidden ngDefaultControl [(ngModel)]="operateId.id">{{cn?.app_id}}</span>
             <!-- <div *ngFor="let item of uploadImg;index as i"> -->
             <!-- <img src="" imgPreview id="{{ 'img_' + nowId.innerText}}" [image]="item?._file" [uploadId]="nowId.innerText" style="display: inline-block;" width="48" height="48"/> -->
-            <img [src]="'/api'+cn?.src" appErrorImg="default/DEFAULTICONOFALL/default-null.png" id="{{ 'img_' + nowId.innerText}}"
+            <img [src]="cn?.src" appErrorImg="default/DEFAULTICONOFALL/default-null.png" id="{{ 'img_' + nowId.innerText}}"
               style="display: inline-block;" width="96" height="96" />
             <!-- </div> -->
           </div>
         </div>
       </div>
       <div style="text-align: center;">
-        <p style="margin-bottom: 0;">{{cn?.cn_name}}</p>
-        <p style="margin-bottom: 0;">{{cn?.pkg_name}}</p>
+        <p class="info_des">{{cn?.cn_name}}</p>
+        <p class="info_des">{{cn?.pkg_name}}</p>
       </div>
     </div>
   </div>

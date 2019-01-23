@@ -11,6 +11,12 @@ export class PaginationComponent implements OnInit {
   @Input() rows: any = 30; // 每页显示数量
   @Input() currentPage: any; // 当前页码
   @Input() pageLinkSize: any; // 页面范围
+
+  @Input() cms_page_type: any; // 后台管理分页时查询类别
+  @Input() page_type: any; // 前台分页时查询类别
+
+
+
   @Output() onPageChange = new EventEmitter();
   public pageCount: any;
   public pageArr: Array<any> = [];
@@ -38,6 +44,8 @@ export class PaginationComponent implements OnInit {
     this.pageLinkSize = this.pageLinkSize ? this.pageLinkSize : 5;
     this.currentPage = this.currentPage ? this.currentPage : 0;
     this.totalRecords = this.totalRecords ? this.totalRecords : 0;
+    this.cms_page_type = this.cms_page_type ? this.cms_page_type : 'company';
+    this.page_type = this.page_type ? this.page_type : 'company';
   }
 
   getPageCount() {
@@ -52,7 +60,9 @@ export class PaginationComponent implements OnInit {
       first: this.currentPage * this.rows,
       rows: this.rows,
       page: this.currentPage,
-      pageCount: this.pageCount
+      pageCount: this.pageCount,
+      cms_page_type: this.cms_page_type,
+      page_type: this.page_type
     }
     this.onPageChange.emit(data);
   }

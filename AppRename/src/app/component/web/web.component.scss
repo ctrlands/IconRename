@@ -2,11 +2,13 @@
   margin-top: 23px;
   margin-bottom: 23px;
 }
+
 .nullblock {
   border: 3px dotted lightgray;
   width: 96px;
   height: 96px;
 }
+
 .activeImg {
   border: none;
 }
@@ -17,14 +19,24 @@
   width: 180px;
   font-size: 14px;
 }
+
 .sty_btn {
   width: 90px;
   margin: 0 10px;
   font-size: 14px;
 }
+
 .dropdown-item {
   cursor: pointer;
 }
+
 .dropdown-menu::-webkit-scrollbar {
   display: none;
+}
+
+.info_des {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-bottom: 0;
 }

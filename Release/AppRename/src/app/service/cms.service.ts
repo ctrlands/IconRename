@@ -10,11 +10,15 @@ export class CmsService {
   ) { }
 
   /**
-   * 获取所有应用数据信息，分页
+   * 获取当前页应用数据信息，分页
    */
-  postInfos_service(page: string) {
+  postInfos_service(page: string, order: string, type: string, qrystatus: boolean, keyword: string) {
     let o_post = {
-      page: page
+      page: page,
+      order: order,
+      type: type,
+      qrystatus: qrystatus,
+      keyword: keyword
     }
     return this.http.post('/cms', o_post);
   }
@@ -46,5 +50,20 @@ export class CmsService {
     }
     return this.http.post('/cms/editOfGetInfo', o_post);
   }
+
+  /**
+   * 按类别关键词查询
+   * @param type ： 查询类别
+   * @param keyword ： 查询关键词
+   */
+  postInfos_query_service(type: string, keyword: string) {
+    let o_post = {
+      type: type,
+      keyword: keyword
+    }
+    return this.http.post('/cms/query', o_post);
+  }
+
+  
 
 }

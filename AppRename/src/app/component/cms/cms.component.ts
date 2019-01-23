@@ -19,6 +19,8 @@ export class CmsComponent implements OnInit {
   public anyList: AppInfo[];
   public pageInfo: PageInfo;
 
+
+
   public page: string; // 当前页码
   public appId: string; // 当前图标id
 
@@ -40,7 +42,20 @@ export class CmsComponent implements OnInit {
   public msg: string; // 返回状态数据提示信息
 
 
-  public upsrc:string; // 文件上传路径
+  public upsrc: string; // 文件上传路径
+
+  public order: string; // 当前排序目标
+
+
+
+
+  // 查询关键词类别
+  public cms_appname: string; // 按应用名查询
+  public cms_company: string; // 按应用开发商查询
+  public cms_category: string; // 按应用类别查询
+  public cms_type: string; // 查询类别
+  public qrystatus: boolean; // 查询状态
+  public keyword: string; //  查询关键词
 
 
   public uploader: any;
@@ -60,7 +75,11 @@ export class CmsComponent implements OnInit {
    */
   public getAppsOfName(): void {
     let page: string = '0';
-    this.getInfoOfAppService.postInfos_service(page)
+    let order: string = 'company';
+    let type: string = 'company';
+    let qrystatus: boolean = false;
+    let keyword: string = '';
+    this.getInfoOfAppService.postInfos_service(page, order, type, qrystatus, keyword)
       .subscribe(res => {
         this.pageInfo = res[1];
         this.anyList = res[0];
@@ -72,7 +91,11 @@ export class CmsComponent implements OnInit {
    * 获取所有应用信息-pagination
    */
   public getAppsOfNames(page): void {
-    this.getInfoOfAppService.postInfos_service(page)
+    let order: string = this.order ? this.order : 'company';
+    let type: string = this.cms_type ? this.cms_type : 'company';
+    let isqry: boolean = this.qrystatus ? this.qrystatus : false;
+    let keyword: string = this.keyword ? this.keyword : '';
+    this.getInfoOfAppService.postInfos_service(page, order, type, isqry, keyword)
       .subscribe(res => {
         this.pageInfo = res[1];
         this.anyList = res[0];
@@ -102,7 +125,7 @@ export class CmsComponent implements OnInit {
         this.company = res[0].company;
         this.alphaIndex = res[0].alpha_index;
         this.category = res[0].category;
-        this.cmsSrc = res[0].cms_src;
+        this.cmsSrc = '/api/default/' + res[0].cms_src;
       })
   }
 
@@ -114,9 +137,6 @@ export class CmsComponent implements OnInit {
       .subscribe(res => {
         if (res[0].code == '200') {
           this.msg = res[0].msg;
-          /* if (this.uploader.queue.length != 0) {
-            this.uploader.clearQueue();
-          } */
 
           this.appName = '';
           this.pkgName = '';
@@ -151,9 +171,7 @@ export class CmsComponent implements OnInit {
     this.category = '';
     this.cmsSrc = '';
 
-    this.upsrc = 'http://localhost:3000/cms/add';
     if (this.uploader && this.uploader.queue && this.uploader.queue.length != 0) {
-      /* this.uploader.options.url = "http://localhost:3000/cms/add"; */
       this.uploader.clearQueue();
     }
 
@@ -164,10 +182,6 @@ export class CmsComponent implements OnInit {
   // 编辑按钮-点击事件
   public edit(appId) {
     this.modal_title = '数据编辑';
-    /* if (this.uploader) {
-      this.uploader.options.url = "http://localhost:3000/cms/edit";
-    } */
-    this.upsrc = 'http://localhost:3000/cms/edit';
 
     this.appName = '';
     this.pkgName = '';
@@ -178,6 +192,8 @@ export class CmsComponent implements OnInit {
     this.appId = appId;
     this.valid = true;
     this.action = 'edit';
+
+    this.isfile = false;
     this.editAppsGet(appId);
   }
 
@@ -187,28 +203,52 @@ export class CmsComponent implements OnInit {
     action = this.action;
     switch (action) {
       case 'add':
-        if (this.uploader) {
-          this.uploader.options.url = "http://localhost:3000/cms/add";
-        }
         if (this.uploader && this.uploader.queue.length >= 1) {
+          this.uploader.queue[this.uploader.queue.length - 1].onSuccess = (response, status, headers) => {
+            // 上传文件成功
+            let res = JSON.parse(response);
+            if (res.code == 200) {
+              // 上传文件后获取服务器返回的数据
+              let add = data.appInfo.value;
+              this.addApps(add);
+            } else {
+              // 上传文件后获取服务器返回的数据错误
+              console.log(res.msg);
+            }
+          };
           this.uploader.queue[this.uploader.queue.length - 1].upload();
+        } else {
+          console.log('操作跑偏啦！');
         }
-        let add = data.appInfo.value;
-        this.addApps(add);
         break;
       case 'edit':
         if (this.uploader && this.uploader.queue.length >= 1) {
-          this.uploader.options.url = "http://localhost:3000/cms/edit";
+          this.uploader.queue[this.uploader.queue.length - 1].onSuccess = (response, status, headers) => {
+            // 上传文件成功
+            let res = JSON.parse(response);
+            if (res.code == 200) {
+              // 上传文件后获取服务器返回的数据
+              let edit = data.appInfo.value;
+              edit.app_id = this.appId;
+              this.editAppsPost(edit);
+            } else {
+              // 上传文件后获取服务器返回的数据错误
+              console.log(res.msg);
+            }
+          };
+
           this.uploader.queue[this.uploader.queue.length - 1].upload();
+        } else {
+          let edit = data.appInfo.value;
+          edit.app_id = this.appId;
+          this.editAppsPost(edit);
         }
-        let edit = data.appInfo.value;
-        edit.app_id = this.appId;
-        this.editAppsPost(edit);
+
         break;
     }
   }
 
-  public isfile: boolean = true;
+  public isfile: boolean = true; // 是否上传了文件
   // 关闭按钮-点击事件
   public close() {
     this.appName = ' ';
@@ -216,7 +256,7 @@ export class CmsComponent implements OnInit {
     this.company = ' ';
     this.alphaIndex = ' ';
     this.category = ' ';
-    this.cmsSrc = '../../../assets/icon/default-cms-null.png';
+    this.cmsSrc = '../assets/icon/default-cms-null.png';
     this.msg = '';
     this.isfile = true;
     this.isClear_par = true;
@@ -230,6 +270,127 @@ export class CmsComponent implements OnInit {
     this.isfile = false;
     this.files = event.event;
     this.uploader = event.uploader;
+  }
+
+
+
+  // 应用开发商排序
+  public orderByCompany(page, order) {
+    page = this.page ? this.page : 0;
+    order = 'company';
+    this.order = 'company';
+
+    let type: string = this.cms_type ? this.cms_type : 'company';
+    let qrystatus: boolean = this.qrystatus ? this.qrystatus : false;
+    let keyword: string = this.keyword ? this.keyword : '';
+    this.getInfoOfAppService.postInfos_service(page, order, type, qrystatus, keyword)
+      .subscribe(res => {
+        this.pageInfo = res[1];
+        this.anyList = res[0];
+      })
+  }
+
+  // 应用名称索引排序
+  public orderByIndex(page, order) {
+    page = this.page ? this.page : 0;
+    order = 'alpha_index';
+    this.order = 'alpha_index';
+
+    let type: string = this.cms_type ? this.cms_type : 'company';
+    let qrystatus: boolean = this.qrystatus ? this.qrystatus : false;
+    let keyword: string = this.keyword ? this.keyword : '';
+
+    this.getInfoOfAppService.postInfos_service(page, order, type, qrystatus, keyword)
+      .subscribe(res => {
+        this.pageInfo = res[1];
+        this.anyList = res[0];
+      })
+  }
+
+  // 应用类别排序
+  public orderByCatergory(page, order) {
+    page = this.page ? this.page : 0;
+    order = 'category';
+    this.order = 'category';
+
+    let type: string = this.cms_type ? this.cms_type : 'company';
+    let qrystatus: boolean = this.qrystatus ? this.qrystatus : false;
+    let keyword: string = this.keyword ? this.keyword : '';
+    this.getInfoOfAppService.postInfos_service(page, order, type, qrystatus, keyword)
+      .subscribe(res => {
+        this.pageInfo = res[1];
+        this.anyList = res[0];
+      })
+  }
+
+
+
+  // 应用名称查询
+  public searchOfName(keyword: string) {
+    this.cms_type = 'cn_name';
+    this.cms_category = '';
+    this.cms_company = '';
+
+    this.order = this.order ? this.order : 'company';
+    this.cms_type = this.cms_type ? this.cms_type : 'company';
+    this.qrystatus = this.qrystatus ? this.qrystatus : true;
+    this.keyword = keyword;
+
+    let page = '0';
+    let order: string = this.order ? this.order : 'cn_name';
+    let type: string = this.cms_type ? this.cms_type : 'cn_name';
+    let qrystatus: boolean = this.qrystatus ? this.qrystatus : true;
+    this.searchOfCms(page, order, type, qrystatus, keyword);
+  }
+
+  // 应用开发商关键词查询
+  public searchOfCompany(keyword: string) {
+    this.cms_type = 'company';
+    this.order = this.order ? this.order : 'company';
+    this.cms_type = this.cms_type ? this.cms_type : 'company';
+    this.qrystatus = this.qrystatus ? this.qrystatus : true;
+
+
+    this.cms_appname = '';
+    this.cms_category = '';
+
+    let page = '0';
+    let order: string = this.order ? this.order : 'company';
+    let type: string = this.cms_type ? this.cms_type : 'company';
+
+    let qrystatus: boolean = this.qrystatus ? this.qrystatus : true;
+    this.keyword = keyword;
+    this.searchOfCms(page, order, type, qrystatus, keyword);
+
+  }
+  // 应用类别关键词查询
+  public searchOfCagry(keyword: string) {
+    this.cms_type = 'category';
+    this.cms_appname = '';
+    this.cms_company = '';
+
+    this.order = this.order ? this.order : 'company';
+    this.cms_type = this.cms_type ? this.cms_type : 'company';
+    this.qrystatus = this.qrystatus ? this.qrystatus : true;
+    this.keyword = keyword;
+
+    
+
+    let page = '0';
+    let order: string = this.order ? this.order : 'category';
+    let type: string = this.cms_type ? this.cms_type : 'category';
+    let qrystatus: boolean = this.qrystatus ? this.qrystatus : true;
+
+    
+    this.searchOfCms(page, order, type, qrystatus, keyword);
+  }
+  // 关键词查询common
+  public searchOfCms(page: string, order: string, type: string, qrystatus: boolean, keyword: string) {
+    this.getInfoOfAppService.postInfos_service(page, order, type, qrystatus, keyword)
+      .subscribe(res => {
+        this.pageInfo = res[1];
+        this.anyList = res[0];
+      })
   }
 
 }
