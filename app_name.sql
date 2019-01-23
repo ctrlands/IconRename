@@ -31,7 +31,7 @@ CREATE TABLE `apps_name`  (
   `src` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '前后端分离时使用',
   `cms_src` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '前后端整合时使用_图标路径',
   PRIMARY KEY (`app_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 10196 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 10196 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of apps_name
@@ -150,7 +150,7 @@ CREATE TABLE `src_info`  (
   `theme_id` int(5) DEFAULT NULL COMMENT '关联theme_name表',
   `src_resource` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '图片地址',
   PRIMARY KEY (`src_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 63 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 63 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for theme_name
@@ -160,7 +160,7 @@ CREATE TABLE `theme_name`  (
   `theme_id` int(5) NOT NULL AUTO_INCREMENT,
   `theme_name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   PRIMARY KEY (`theme_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 10058 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 10058 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of theme_name
